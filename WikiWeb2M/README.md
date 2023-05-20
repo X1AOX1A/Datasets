@@ -41,20 +41,20 @@ The dataset is stored as gzipped TFRecord files which can be downloaded via thes
 #!/bin/bash
 
 # Create directories
-mkdir "WikiWeb2M/train"
-mkdir "WikiWeb2M/valid"
-mkdir "WikiWeb2M/test"
+mkdir "train"
+mkdir "valid"
+mkdir "test"
 
 # Download training set
 for i in {0..4}; do
-    wget -P "WikiWeb2M/train" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-train.tfrecord.gz-0000${i}-of-00005"
+    wget -P "train" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-train.tfrecord.gz-0000${i}-of-00005"
 done
 
 # Download validation set
-wget -P "WikiWeb2M/valid" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-val.tfrecord.gz"
+wget -P "valid" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-val.tfrecord.gz"
 
 # Download test set
-wget -P "WikiWeb2M/test" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-test.tfrecord.gz"
+wget -P "test" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-test.tfrecord.gz"
 ```
 
 Excute:
