@@ -33,6 +33,36 @@ The dataset is stored as gzipped TFRecord files which can be downloaded via thes
 [wikiweb2m-test.tfrecord.gz](https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-test.tfrecord.gz)
 
 
+## Download Script
+
+- `download_datasets.sh`:
+
+```shell
+#!/bin/bash
+
+# Create directories
+mkdir "WikiWeb2M/train"
+mkdir "WikiWeb2M/valid"
+mkdir "WikiWeb2M/test"
+
+# Download training set
+for i in {0..4}; do
+    wget -P "WikiWeb2M/train" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-train.tfrecord.gz-0000${i}-of-00005"
+done
+
+# Download validation set
+wget -P "WikiWeb2M/valid" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-val.tfrecord.gz"
+
+# Download test set
+wget -P "WikiWeb2M/test" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-test.tfrecord.gz"
+```
+
+Excute:
+
+```shell
+chmod +x download_datasets.sh
+nohup ./download_datasets.sh >nohup.out& 2>&1
+```
 
 ## WikiWeb2M Statistics
 
