@@ -1,5 +1,0 @@
-# 忽略除了README.md以外的所有文件和文件夹
-*
-# 但允许跟踪README.md文件
-**/README.md
-!.gitignore
