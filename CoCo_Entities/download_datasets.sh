@@ -1,0 +1,1 @@
+wget https://ailb-web.ing.unimore.it/publicfiles/drive/show-control-and-tell/coco_entities_release.json
