@@ -12,6 +12,8 @@ def WikiWeb2M_dataset(data_dir, split):
     """
     Args:
         data_dir: path to the directory containing the tfrecord files and index files
+            the tfrecord files are named as "wikiweb2m-{split}.tfrecord"
+            the index files are named as "wikiweb2m-{split}.tfidnex"
         split: one of "train", "val", "test"
     Returns:
         dataset: a TFRecordDataset object
@@ -69,13 +71,6 @@ def WikiWeb2M_dataset(data_dir, split):
     return dataset
 
 if __name__ == "__main__":
-    # the data dir should contain the tfrecord files and index files in the following format:
-    # wikiweb2m-train.tfrecord
-    # wikiweb2m-train.tfindex
-    # wikiweb2m-val.tfrecord
-    # wikiweb2m-val.tfindex
-    # wikiweb2m-test.tfrecord
-    # wikiweb2m-test.tfindex
     DATA_DIR = "/data/root/Documents/DATASETS/WikiWeb2M"
 
     split = "train"
