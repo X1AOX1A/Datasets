@@ -26,24 +26,25 @@ watch -n 1 tail nohup.out
 - The downloaded files are structured as follows:
 
 ```
-ILSVRC2012/
-    bounding_boxes/
-        train/
-            ILSVRC2012_bbox_train_dogs.tar.gz
-            ILSVRC2012_bbox_train_v2.tar.gz
-        valid/
-            ILSVRC2012_bbox_val_v3.tgz
-        test/
-            ILSVRC2012_bbox_test_dogs.zip
+ImageNet/
+    ILSVRC2012/
+        bounding_boxes/
+            train/
+                ILSVRC2012_bbox_train_dogs.tar.gz
+                ILSVRC2012_bbox_train_v2.tar.gz
+            valid/
+                ILSVRC2012_bbox_val_v3.tgz
+            test/
+                ILSVRC2012_bbox_test_dogs.zip
 
-    images/
-        train/
-            ILSVRC2012_img_train.tar
-            ILSVRC2012_img_train_t3.tar
-        valid/
-            ILSVRC2012_img_val.tar
-        test/
-            ILSVRC2012_img_test_v10102019.tar
+        images/
+            train/
+                ILSVRC2012_img_train.tar
+                ILSVRC2012_img_train_t3.tar
+            valid/
+                ILSVRC2012_img_val.tar
+            test/
+                ILSVRC2012_img_test_v10102019.tar
 ```
 
 ## Statistics
