@@ -77,5 +77,14 @@ if __name__ == "__main__":
     batch_size = 1
     dataset = WikiWeb2M_dataset(DATA_DIR, split)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size)
-    data = next(iter(dataloader))
-    print(data)
+
+    iterater = iter(dataloader)
+    while True:
+        try:                        
+            data = next(iterater)
+            print(data, width=120)
+            input("\nPress Enter to display the next example...")
+            os.system('clear') # clear screen
+        except StopIteration:
+            print("End of examples.")
+            break
