@@ -1,36 +1,8 @@
 # Flickr30K Entities Dataset
 
-If you use our dataset, please cite our [paper](https://arxiv.org/pdf/1505.04870.pdf):
-
-    @article{flickrentitiesijcv,
-        title={Flickr30K Entities: Collecting Region-to-Phrase Correspondences for Richer Image-to-Sentence Models},
-        author={Bryan A. Plummer and Liwei Wang and Christopher M. Cervantes and Juan C. Caicedo and Julia Hockenmaier and Svetlana Lazebnik},
-        journal={IJCV},
-        volume={123},
-        number={1},
-        pages={74-93},
-        year={2017}
-    }
-
-In addition to citing our paper, please also reference the original Flickr30K dataset:
-
-    @article{flickr30k,
-        title={From image descriptions to visual denotations: New similarity metrics for semantic inference over event descriptions},
-        author={Peter Young and Alice Lai and Micah Hodosh and Julia Hockenmaier},
-        journal={TACL},
-        volume={2},
-        pages={67--78},
-        year={2014}
-    }
-
 Note that the Flickr30K Dataset includes images obtained from [Flickr](https://www.flickr.com/). Use of the images must abide by the [Flickr Terms of Use](http://www.flickr.com/help/terms/). We do not own the copyright of the images. They are solely provided for researchers and educators who wish to use the dataset for non-commercial research and/or educational purposes.
 
-
-## Version 1.0 
-
-This dataset contains 244k coreference chains and 276k manually annotated bounding boxes for each of the 31,783 images and 158,915 English captions (five per image) in the original dataset. 
-
-To obtain the images for this dataset, please visit the [Flickr30K webpage](http://hockenmaier.cs.illinois.edu/DenotationGraph/) and fill out the form linked to at tbe bottom of the page.
+## Data Features
 
 #### Coreference Chains:
 
@@ -51,32 +23,6 @@ Each object tag also contains one or more name tags which contain the chain ids 
 
 We have a list of the captions in the dataset that do not relate to the images themselves in the UNRELATED_CAPTIONS file.  This list is likely incomplete.
 
-#### Dataset Splits:
-
-Flickr30K has been evaluated under multiple splits so have provided the image splits used in our experiments in the train.txt, test.txt, and val.txt files.
-
-## Matlab Interface
-
-We have included Matlab code to parse our data files.  
-
-To extract Coreference information use the following function call:
-
-    >> corefData = getSentenceData('<path_to_annotation_directory>/Sentences/<image id>.txt');
-
-To extract the xml data use the following:
-
-    >> annotationData = getAnnotations('<path_to_annotation_directory>/Annotations/<image id>.xml');
-    
-Please see each function for details about the structures returned from each function.
-
-## Python Interface
-
-The python interface to parse out data files follow the same format as the Matlab interface, except underscores were used rather than camel case.  Please see [the code's documentation](flickr30k_entities_utils.py) for further information about the provided functions.
-
-## Acknowledgements:
-
-This material is based upon work supported by the National Science Foundation under Grants No. 1053856, 1205627, 1405883, IIS-1228082, and CIF-1302438 as well as support from  Xerox UAC and the Sloan Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation or any sponsor.
-
 ## Data Example
 
 - `[/LANG#ID/ENTITY_TAG noun chunck]`
@@ -96,5 +42,56 @@ This material is based upon work supported by the National Science Foundation un
 [/EN#26283/people Little girl] with [/EN#26288/clothing backpack] pushing [/EN#26285/people brother] in [/EN#26284/other stroller] .
 [/EN#26283/people A child] pushing [/EN#26285/people their younger sibling] in [/EN#26284/other a stroller] .
 ```
+
+## Download Links
+
+- [Download_link](https://github.com/BryanPlummer/flickr30k_entities)
+
+## Download Script
+
+```shell
+cd DATASET_NAME
+chmod +x download_datasets.sh
+nohup ./download_datasets.sh >nohup.out& 2>&1
+watch -n 1 tail nohup.out
+```
+
+- The downloaded files are structured as follows:
+
+```
+Flickr30k_Entities/
+    annotations.zip             28M
+    train.txt                   316K
+    val.txt                     12K 
+    test.txt                    12K 
+    UNRELATED_CAPTIONS          4.0K
+    flickr30k_entities_utils.py 8.0K
+    getAnnotations.m            4.0K
+    getSentenceData.m           4.0K
+```
+
+## Statistics
+
+NA
+
+## Matlab Interface
+
+We have included Matlab code to parse our data files.  
+
+To extract Coreference information use the following function call:
+
+    >> corefData = getSentenceData('<path_to_annotation_directory>/Sentences/<image id>.txt');
+
+To extract the xml data use the following:
+
+    >> annotationData = getAnnotations('<path_to_annotation_directory>/Annotations/<image id>.xml');
+    
+Please see each function for details about the structures returned from each function.
+
+## Python Interface
+
+The python interface to parse out data files follow the same format as the Matlab interface, except underscores were used rather than camel case.  Please see [the code's documentation](flickr30k_entities_utils.py) for further information about the provided functions.
+
+## Reference
 
 - [Ref](https://github.com/BryanPlummer/flickr30k_entities)

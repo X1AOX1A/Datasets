@@ -1,5 +1,6 @@
-# imagenet-captions
-Release of ImageNet-Captions
+# ImageNet Captions
+
+## Data Features
 
 The json file contains a list of dictionaries describing the images in the dataset. Each image has the following information:
 
@@ -9,15 +10,7 @@ The json file contains a list of dictionaries describing the images in the datas
 * description: str
 * tags: list of str
 
-Feel free to create your own captions, or just combine title, tag, description separated by spaces.
-
-Paper link: http://arxiv.org/abs/2205.01397
-
-NoCLIP Model link (35.7% ImageNet top-1): https://drive.google.com/file/d/100FHV8q75DLsef1l5_oJsdjIidyjp7RP/view?usp=sharing
-
-- [Download&Ref](https://github.com/mlfoundations/imagenet-captions)
-
-# Examples
+## Data Example
 
 ```json
 {
@@ -90,3 +83,31 @@ NoCLIP Model link (35.7% ImageNet top-1): https://drive.google.com/file/d/100FHV
         "wnid": "n03146219"
     },
 ```
+
+## Download Links
+
+- [Download](https://github.com/mlfoundations/imagenet-captions)
+
+## Download Script
+
+```shell
+cd DATASET_NAME
+chmod +x download_datasets.sh
+nohup ./download_datasets.sh >nohup.out& 2>&1
+watch -n 1 tail nohup.out
+```
+
+- The downloaded files are structured as follows:
+
+```
+ImageNet_Captions/
+    imagenet_captions.json  131M
+```
+
+## Statistics
+
+NA
+
+## Reference
+
+- [Ref](https://github.com/mlfoundations/imagenet-captions)
