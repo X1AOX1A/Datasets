@@ -1,21 +1,21 @@
 #!/bin/bash
 
 # Create directories
-mkdir "Open Image"
+mkdir "Open_Image"
 mkdir "COCO"
 mkdir "Flickr30k"
 mkdir "ADE20k"
 
 # Download Open Images
-mkdir "Open Image/train"
+mkdir "Open_Image/train"
 for i in {0..9}; do
-    wget -P "Open Image/train" "https://storage.googleapis.com/localized-narratives/annotations/open_images_train_v6_localized_narratives-0000${i}-of-00010.jsonl"
+    wget -P "Open_Image/train" "https://storage.googleapis.com/localized-narratives/annotations/open_images_train_v6_localized_narratives-0000${i}-of-00010.jsonl"
 done
 
-mkdir "Open Image/valid"
+mkdir "Open_Image/valid"
 wget -P "Open Image/valid" "https://storage.googleapis.com/localized-narratives/annotations/open_images_validation_localized_narratives.jsonl"
 
-mkdir "Open Image/test"
+mkdir "Open_Image/test"
 wget -P "Open Image/test" "https://storage.googleapis.com/localized-narratives/annotations/open_images_test_localized_narratives.jsonl"
 
 # Download COCO
