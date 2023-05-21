@@ -32,29 +32,46 @@ The dataset is stored as gzipped TFRecord files which can be downloaded via thes
 
 [wikiweb2m-test.tfrecord.gz](https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-test.tfrecord.gz)
 
-
 ## Download Script
 
-- `download_datasets.sh`:
+- `download_datasets.sh`
 
 ```shell
 #!/bin/bash
 
-# Create directories
-mkdir "train"
-mkdir "valid"
-mkdir "test"
-
-# Download training set
+## Download datasets
+echo "Downloading datasets..."
 for i in {0..4}; do
-    wget -P "train" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-train.tfrecord.gz-0000${i}-of-00005"
+    echo "Downloading wikiweb2m-train.tfrecord.gz-0000${i}-of-00005"
+    wget "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-train.tfrecord.gz-0000${i}-of-00005"
 done
+echo "Downloading wikiweb2m-val.tfrecord.gz"
+wget "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-val.tfrecord.gz"
+echo "Downloading wikiweb2m-test.tfrecord.gz"
+wget "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-test.tfrecord.gz"
 
-# Download validation set
-wget -P "valid" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-val.tfrecord.gz"
+## Extract compressed files
+echo "Extracting compressed files..."
+echo "Combining wikiweb2m-train.tfrecord.gz parts into a single file"
+cat wikiweb2m-train.tfrecord.gz-000* > wikiweb2m-train.tfrecord.gz
+rm wikiweb2m-train.tfrecord.gz-000*
+echo "Decompressing wikiweb2m-train.tfrecord.gz"
+gzip -d "wikiweb2m-train.tfrecord.gz"
+echo "Decompressing wikiweb2m-val.tfrecord.gz"
+gzip -d "wikiweb2m-val.tfrecord.gz"
+echo "Decompressing wikiweb2m-test.tfrecord.gz"
+gzip -d "wikiweb2m-test.tfrecord.gz"
 
-# Download test set
-wget -P "test" "https://storage.googleapis.com/gresearch/wit/wikiweb2m/wikiweb2m-test.tfrecord.gz"
+## Create index files
+# pip3 install tfrecord
+echo "Creating index files..."
+echo "Creating index for wikiweb2m-train.tfrecord"
+python3 -m tfrecord.tools.tfrecord2idx wikiweb2m-train.tfrecord wikiweb2m-train.tfidnex
+echo "Creating index for wikiweb2m-val.tfrecord"
+python3 -m tfrecord.tools.tfrecord2idx wikiweb2m-val.tfrecord wikiweb2m-val.tfidnex
+echo "Creating index for wikiweb2m-test.tfrecord"
+python3 -m tfrecord.tools.tfrecord2idx wikiweb2m-test.tfrecord wikiweb2m-test.tfidnex
+echo "Done!"
 ```
 
 Excute:
@@ -149,85 +166,32 @@ Here we provide a small code snippet for how to load the TFRecord files. First,
 load any necessary packages.
 
 ```python
-import numpy as np
-import glob
-import tensorflow.compat.v1 as tf
-from collections import defaultdict
-```
+# pip install tfrecord
+# pip install pprint
+import torch
+from tfrecord.torch.dataset import TFRecordDataset
 
-Next, define a data parser class.
-~~~markdown
-```python
-class DataParser():
-  def __init__(self,
-               filepath: str = 'wikiweb2m-*',
-               path: str):
-    self.filepath = filepath
-    self.path = path
-    self.data = defaultdict(list)
+tfrecord_path = "path/to/tfrecord/file.tfrecord"
+dataset = TFRecordDataset(tfrecord_path)
+loader = torch.utils.data.DataLoader(dataset, batch_size=1)
 
-  def parse_data(self):
-    context_feature_description = {
-        'split': tf.io.FixedLenFeature([], dtype=tf.string),
-        'page_title': tf.io.FixedLenFeature([], dtype=tf.string),
-        'page_url': tf.io.FixedLenFeature([], dtype=tf.string),
-        'clean_page_description': tf.io.FixedLenFeature([], dtype=tf.string),
-        'raw_page_description': tf.io.FixedLenFeature([], dtype=tf.string),
-        'is_page_description_sample': tf.io.FixedLenFeature([], dtype=tf.int64),
-        'page_contains_images': tf.io.FixedLenFeature([], dtype=tf.int64),
-        'page_content_sections_without_table_list': tf.io.FixedLenFeature([] , dtype=tf.int64)
-    }
+data = next(iter(loader))
 
-    sequence_feature_description = {
-        'is_section_summarization_sample': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_title': tf.io.VarLenFeature(dtype=tf.string),
-        'section_index': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_depth': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_heading_level': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_subsection_index': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_parent_index': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_text': tf.io.VarLenFeature(dtype=tf.string),
-        'section_clean_1st_sentence': tf.io.VarLenFeature(dtype=tf.string),
-        'section_raw_1st_sentence': tf.io.VarLenFeature(dtype=tf.string),
-        'section_rest_sentence': tf.io.VarLenFeature(dtype=tf.string),
-        'is_image_caption_sample': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_image_url': tf.io.VarLenFeature(dtype=tf.string),
-        'section_image_mime_type': tf.io.VarLenFeature(dtype=tf.string),
-        'section_image_width': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_image_height': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_image_in_wit': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_contains_table_or_list': tf.io.VarLenFeature(dtype=tf.int64),
-        'section_image_captions': tf.io.VarLenFeature(dtype=tf.string),
-        'section_image_alt_text': tf.io.VarLenFeature(dtype=tf.string),
-        'section_image_raw_attr_desc': tf.io.VarLenFeature(dtype=tf.string),
-        'section_image_clean_attr_desc': tf.io.VarLenFeature(dtype=tf.string),
-        'section_image_raw_ref_desc': tf.io.VarLenFeature(dtype=tf.string),
-        'section_image_clean_ref_desc': tf.io.VarLenFeature(dtype=tf.string),
-        'section_contains_images': tf.io.VarLenFeature(dtype=tf.int64)
-    }
+from pprint import pprint as print
+print(data)
 
-    def _parse_function(example_proto):
-      return tf.io.parse_single_sequence_example(example_proto,
-                                                 context_feature_description,
-                                                 sequence_feature_description)
-
-    suffix = '.tfrecord*'
-
-    data_path = glob.Glob(self.path + self.filepath + suffix)
-    raw_dataset = tf.data.TFRecordDataset(data_path, compression_type='GZIP')
-    parsed_dataset = raw_dataset.map(_parse_function)
-
-    for d in parsed_dataset:
-      split = d[0]['split'].numpy().decode()
-      self.data[split].append(d)
-```
-~~~
-
-Then you can run the following to parse the dataset.
-```python
-parser = DataParser()
-parser.parse_data()
-print((len(parser.data['train']), len(parser.data['val']), len(parser.data['test'])))
+# {'clean_page_description': [b'Christopher Razis is a Cypriot/Greek professiona'
+#                             b'l basketball player for Keravnos of the Cypriot '
+#                             b'League. He is a 1.94 m tall combo guard.'],
+#  'is_page_description_sample': tensor([[1]]),
+#  'page_contains_images': tensor([[1]]),
+#  'page_content_sections_without_table_list': tensor([[2]]),
+#  'page_title': [b'Christopher Razis'],
+#  'page_url': [b'http://en.wikipedia.org/wiki/Christopher_Razis'],
+#  'raw_page_description': [b'Christopher Razis is a Cypriot/Greek professiona'
+#                           b'l basketball player for Keravnos of the Cypriot '
+#                           b'League. He is a 1.94 m tall combo guard.'],
+#  'split': [b'test']}
 ```
 ### Models
 Our full attention, transient global, and prefix global experiments were run
