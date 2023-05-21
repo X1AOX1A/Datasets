@@ -167,31 +167,66 @@ load any necessary packages.
 
 ```python
 # pip install tfrecord
-# pip install pprint
+# Add `default value ""` to tfrecord.reader.process_feature
+# tfrecord/reader.py/line 116
+#         value = value[0] if value else ""
+
 import torch
-from tfrecord.torch.dataset import TFRecordDataset
-
-tfrecord_path = "path/to/tfrecord/file.tfrecord"
-dataset = TFRecordDataset(tfrecord_path)
-loader = torch.utils.data.DataLoader(dataset, batch_size=1)
-
-data = next(iter(loader))
-
 from pprint import pprint as print
-print(data)
+from tfrecord.torch.dataset import TFRecordDataset
+context_description = {
+    "split": "byte",
+    "page_title": "byte",
+    "page_url": "byte",
+    "clean_page_description": "byte",
+    "raw_page_description": "byte",
+    "is_page_description_sample": "int",
+    "page_contains_images": "int",
+    "page_content_sections_without_table_list": "int"
+}
 
-# {'clean_page_description': [b'Christopher Razis is a Cypriot/Greek professiona'
-#                             b'l basketball player for Keravnos of the Cypriot '
-#                             b'League. He is a 1.94 m tall combo guard.'],
-#  'is_page_description_sample': tensor([[1]]),
-#  'page_contains_images': tensor([[1]]),
-#  'page_content_sections_without_table_list': tensor([[2]]),
-#  'page_title': [b'Christopher Razis'],
-#  'page_url': [b'http://en.wikipedia.org/wiki/Christopher_Razis'],
-#  'raw_page_description': [b'Christopher Razis is a Cypriot/Greek professiona'
-#                           b'l basketball player for Keravnos of the Cypriot '
-#                           b'League. He is a 1.94 m tall combo guard.'],
-#  'split': [b'test']}
+
+sequence_description = {
+    "is_section_summarization_sample": "int",
+    "section_title": "byte",
+    "section_index": "int",
+    "section_depth": "int",
+    "section_heading_level": "int",
+    "section_subsection_index": "int",
+    "section_parent_index": "int",
+    "section_text": "byte",
+    "section_clean_1st_sentence": "byte",
+    "section_raw_1st_sentence": "byte",
+    "section_rest_sentence": "byte",
+    "is_image_caption_sample": "int",
+    "section_image_url": "byte",
+    "section_image_mime_type": "byte",
+    "section_image_width": "int",
+    "section_image_height": "int",
+    "section_image_in_wit": "int",
+    "section_contains_table_or_list": "int",
+    "section_image_captions": "byte",
+    "section_image_alt_text": "byte",
+    "section_image_raw_attr_desc": "byte",
+    "section_image_clean_attr_desc": "byte",
+    "section_image_raw_ref_desc": "byte",
+    "section_image_clean_ref_desc": "byte",
+    "section_contains_images": "int"
+}
+
+
+tfrecord_path = "/data/root/Documents/DATASETS/WikiWeb2M/wikiweb2m-val.tfrecord"
+index_path = "/data/root/Documents/DATASETS/WikiWeb2M/wikiweb2m-val.tfidnex"
+
+dataset = TFRecordDataset(
+    data_path=tfrecord_path, 
+    index_path=index_path, 
+    description=context_description,
+    sequence_description=sequence_description
+)
+dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False)
+data = next(iter(dataloader))
+print(data)
 ```
 ### Models
 Our full attention, transient global, and prefix global experiments were run
