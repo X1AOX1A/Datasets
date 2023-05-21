@@ -80,7 +80,7 @@ Each line represents one Localized Narrative annotation on one image by one anno
 ## Download Script
 
 ```shell
-cd DATASET_NAME
+cd Localized_Narratives
 chmod +x download_datasets.sh
 nohup ./download_datasets.sh >nohup.out& 2>&1
 watch -n 1 tail nohup.out

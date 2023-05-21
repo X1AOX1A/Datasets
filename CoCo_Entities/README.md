@@ -86,7 +86,7 @@ If you want to use only the annotations of our COCO Entities dataset, you can do
 ## Download Script
 
 ```shell
-cd DATASET_NAME
+cd CoCo_Entities
 chmod +x download_datasets.sh
 nohup ./download_datasets.sh >nohup.out& 2>&1
 watch -n 1 tail nohup.out
@@ -95,10 +95,8 @@ watch -n 1 tail nohup.out
 - The downloaded files are structured as follows:
 
 ```
-DATASET_NAME/
-    train.file xxG
-    valid.file xxM
-    test.file xxM
+CoCo_Entities/
+    coco_entities_release.json  404M
 ```
 
 ## Statistics

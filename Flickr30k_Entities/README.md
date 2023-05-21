@@ -50,7 +50,7 @@ We have a list of the captions in the dataset that do not relate to the images t
 ## Download Script
 
 ```shell
-cd DATASET_NAME
+cd Flickr30k_Entities
 chmod +x download_datasets.sh
 nohup ./download_datasets.sh >nohup.out& 2>&1
 watch -n 1 tail nohup.out

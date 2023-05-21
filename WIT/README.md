@@ -108,7 +108,7 @@ Here are the links to download the WIT test set files.
 ## Download Script
 
 ```shell
-cd DATASET_NAME
+cd WIT
 chmod +x download_datasets.sh
 nohup ./download_datasets.sh >nohup.out& 2>&1
 watch -n 1 tail nohup.out
