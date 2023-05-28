@@ -1,4 +1,4 @@
 # MSCOCO
 
-- Download with `clip_benchmark`
-- Ref: [Open_CLip](https://github.com/X1AOX1A/Demos/tree/main/open_clip#fine-tuning-coca)
+- Download with `lavis`
+- Ref: [LAVIS](https://opensource.salesforce.com/LAVIS//latest/getting_started.html#auto-downloading-and-loading-datasets)
