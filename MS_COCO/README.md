@@ -28,11 +28,17 @@ print(coco_dataset["train"][0])
 ## Download Links
 
 ```python
-DATA_URL = {
+data_url = {
     "train": "http://images.cocodataset.org/zips/train2014.zip",  # md5: 0da8c0bd3d6becc4dcb32757491aca88
     "val": "http://images.cocodataset.org/zips/val2014.zip",  # md5: a3d79f5ed8d289b7a7554ce06a5782b3
     "test": "http://images.cocodataset.org/zips/test2014.zip",  # md5: 04127eef689ceac55e3a572c2c92f264
     "test2015": "http://images.cocodataset.org/zips/test2015.zip",  # md5: 04127eef689ceac55e3a572c2c92f264
+}
+
+annotations = {
+  "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_train.json",
+  "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val.json",
+  "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_test.json",
 }
 ```
 - Ref: [lavis/datasets/download_scripts/download_coco.py](https://github.com/salesforce/LAVIS/blob/main/lavis/datasets/download_scripts/download_coco.py)
