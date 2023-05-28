@@ -27,13 +27,20 @@ print(coco_dataset["train"][0])
 
 ## Download Links
 
-- Download with `lavis`
-- Ref: [LAVIS](https://opensource.salesforce.com/LAVIS//latest/getting_started.html#auto-downloading-and-loading-datasets)
+```python
+DATA_URL = {
+    "train": "http://images.cocodataset.org/zips/train2014.zip",  # md5: 0da8c0bd3d6becc4dcb32757491aca88
+    "val": "http://images.cocodataset.org/zips/val2014.zip",  # md5: a3d79f5ed8d289b7a7554ce06a5782b3
+    "test": "http://images.cocodataset.org/zips/test2014.zip",  # md5: 04127eef689ceac55e3a572c2c92f264
+    "test2015": "http://images.cocodataset.org/zips/test2015.zip",  # md5: 04127eef689ceac55e3a572c2c92f264
+}
+```
+- Ref: [lavis/datasets/download_scripts/download_coco.py](https://github.com/salesforce/LAVIS/blob/main/lavis/datasets/download_scripts/download_coco.py)
 
 ## Download Script
 
 ```shell
-cd DATASET_NAME
+cd MS_COCO
 chmod +x download_datasets.sh
 nohup ./download_datasets.sh >nohup.out& 2>&1
 watch -n 1 tail nohup.out
@@ -42,10 +49,17 @@ watch -n 1 tail nohup.out
 - The downloaded files are structured as follows:
 
 ```
-DATASET_NAME/
-    train.file xxG
-    valid.file xxM
-    test.file xxM
+MS_COCO/
+|-- [  86]  download
+|   |-- [6.2G]  test2014.zip
+|   |-- [ 12G]  test2015.zip
+|   |-- [ 13G]  train2014.zip
+|   `-- [6.2G]  val2014.zip
+`-- [  90]  images
+    |-- [2.3M]  test2014
+    |-- [6.6M]  test2015
+    |-- [6.8M]  train2014
+    `-- [2.4M]  val2014
 ```
 
 ## Statistics
