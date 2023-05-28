@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Define the target directories
-download_dir="download"
-unzip_dir="images"
-
 # Create the target directories
-mkdir -p $download_dir
-mkdir -p $unzip_dir
+mkdir -p "download"
+mkdir -p "images"
+mkdir -p "annotations"
 
 # Loop through each link
 declare -A links=(
@@ -29,6 +26,19 @@ for key in "${!links[@]}"; do
     
     # Remove the downloaded zip file
     # rm "$download_dir/$(basename $link)"
+done
+
+# Download the annotations
+echo "Downloading annotations..."
+urls=(
+  "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_train.json"
+  "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val.json"
+  "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_test.json"
+)
+
+for url in "${urls[@]}"
+do
+  wget "$url" -P "annotations/"
 done
 
 echo "Download and extraction completed!"

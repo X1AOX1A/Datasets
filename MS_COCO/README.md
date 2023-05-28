@@ -50,6 +50,10 @@ watch -n 1 tail nohup.out
 
 ```
 MS_COCO/
+|-- [ 115]  annotations
+|   |-- [1.7M]  coco_karpathy_test.json
+|   |-- [ 81M]  coco_karpathy_train.json
+|   `-- [1.7M]  coco_karpathy_val.json
 |-- [  86]  download
 |   |-- [6.2G]  test2014.zip
 |   |-- [ 12G]  test2015.zip
