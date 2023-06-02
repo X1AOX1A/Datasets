@@ -22,10 +22,10 @@ for key in "${!links[@]}"; do
     
     # Extract the file
     echo "Extracting $key..."
-    unzip -q "$download_dir/$(basename $link)" -d $unzip_dir
+    unzip -q "$download_dir/$key" -d $unzip_dir
     
     # Remove the downloaded zip file
-    # rm "$download_dir/$(basename $link)"
+    # rm "$download_dir/$key"
 done
 
 # Download the annotations

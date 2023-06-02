@@ -66,10 +66,10 @@ MS_COCO/
 |   |-- [ 13G]  train2014.zip
 |   `-- [6.2G]  val2014.zip
 `-- [  90]  images
-    |-- [2.3M]  test2014
+    |-- [2.3M]  test
     |-- [6.6M]  test2015
-    |-- [6.8M]  train2014
-    `-- [2.4M]  val2014
+    |-- [6.8M]  train
+    `-- [2.4M]  val
 ```
 
 ## Statistics
