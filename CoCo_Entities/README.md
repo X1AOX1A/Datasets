@@ -20,7 +20,7 @@ In details, for each image-caption pair, we provide the following information:
 
 ## Data Example
 
-![coco entities](https://x1a-alioss.oss-cn-shenzhen.aliyuncs.com/SnippetsLab/coco_entities.png)
+![coco entities](https://github.com/aimagelab/show-control-and-tell/raw/master/images/sample_results.png)
 
 ```
 520208": {
