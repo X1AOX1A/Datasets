@@ -20,10 +20,10 @@ In details, for each image-caption pair, we provide the following information:
 
 ## Data Example
 
-![coco entities](https://github.com/aimagelab/show-control-and-tell/raw/master/images/sample_results.png)
+![coco entities](https://github.com/aimagelab/show-control-and-tell/raw/master/images/coco_entities.png)
 
 ```
-520208": {
+"520208": {
     "a spoon sitting on some food in a bowl": {
         "det_sequences": ["spoon", "spoon", null, null, "food", "food", null, "bowl", "bowl"], 
         "noun_chunks": [
@@ -105,4 +105,5 @@ NA
 
 ## Reference
 
+- [coco_entities_demo.ipynb](https://github.com/aimagelab/show-control-and-tell/blob/master/demo/coco_entities_demo.ipynb)
 - [Ref](https://github.com/aimagelab/show-control-and-tell/tree/master#coco-entities-1)
