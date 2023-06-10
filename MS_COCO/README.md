@@ -27,39 +27,38 @@ val = read_json(ann_paths["val"])
 test = read_json(ann_paths["test"])
 
 print("Train:\n", train[0])
+# Train:
+# {
+#     'caption': 'A woman wearing a net on her head cutting a cake. ', 
+#     'image': 'val2014/COCO_val2014_000000522418.jpg', 
+#     'image_id': 'coco_522418'
+# }
+
 print("Val:\n"val[0])
+# Val:
+# {
+#     'image': 'val2014/COCO_val2014_000000184613.jpg', 
+#     'caption': [
+#         'A child holding a flowered umbrella and petting a yak.', 
+#         'A young man holding an umbrella next to a herd of cattle.', 
+#         'a young boy barefoot holding an umbrella touching the horn of a cow', 
+#         'A young boy with an umbrella who is touching the horn of a cow.', 
+#         'A boy holding an umbrella while standing next to livestock.'
+#     ]
+# }
+
 print("Test:\n": test[0])
-```
-Train:
-{
-    'caption': 'A woman wearing a net on her head cutting a cake. ', 
-    'image': 'val2014/COCO_val2014_000000522418.jpg', 
-    'image_id': 'coco_522418'
-}
-
-Val:
-{
-    'image': 'val2014/COCO_val2014_000000184613.jpg', 
-    'caption': [
-        'A child holding a flowered umbrella and petting a yak.', 
-        'A young man holding an umbrella next to a herd of cattle.', 
-        'a young boy barefoot holding an umbrella touching the horn of a cow', 
-        'A young boy with an umbrella who is touching the horn of a cow.', 
-        'A boy holding an umbrella while standing next to livestock.'
-    ]
-}
-
-Test:
-{
-    'image': 'val2014/COCO_val2014_000000391895.jpg', 
-    'caption': [
-        'A man with a red helmet on a small moped on a dirt road. ', 
-        'Man riding a motor bike on a dirt road on the countryside.', 
-        'A man riding on the back of a motorcycle.', 
-        'A dirt path with a young person on a motor bike rests to the foreground of a verdant area with a bridge and a background of cloud-wreathed mountains. ', 
-        'A man in a red shirt and a red hat is on a motorcycle on a hill side.'
-    ]
-}
+# Test:
+# {
+#     'image': 'val2014/COCO_val2014_000000391895.jpg', 
+#     'caption': [
+#         'A man with a red helmet on a small moped on a dirt road. ', 
+#         'Man riding a motor bike on a dirt road on the countryside.', 
+#         'A man riding on the back of a motorcycle.', 
+#         'A dirt path with a young person on a motor bike rests to the foreground of a verdant area with a bridge and a background of cloud-wreathed mountains. ', 
+#         'A man in a red shirt and a red hat is on a motorcycle on a hill side.'
+#     ]
+# }
 ```
 
 ## Download Links
