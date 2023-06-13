@@ -33,11 +33,7 @@ class FilterCoCoAnnEntities:
         for split, file in splits.items():
             data = json.load(
                 open(os.path.join(ann_root, file), "r")
-            )
-            # modify the "image_id"
-            for i, ann in enumerate(data):
-                data[i]["image_id"] = str(int(ann["image"].split('_')[-1].split('.')[0]))
-            
+            )                    
             annotations[split] = data                
         return annotations
 
@@ -80,12 +76,15 @@ class FilterCoCoAnnEntities:
                 # return the matched caption
                 return list(entities.keys())[idx]
         return None
+    
+    def get_image_id(self, ann):
+        return str(int(ann["image"].split('_')[-1].split('.')[0]))
 
     def filter_train(self):
         print("\nFiltering train split...")
         counter = 0
         for annotate in tqdm(self.coco_annotates["train"]):
-            image_id = annotate["image_id"]
+            image_id = self.get_image_id(annotate)
             if image_id in self.coco_entities["train"]:
                 caption = annotate["caption"]
                 entities = self.coco_entities["train"][image_id]
@@ -102,7 +101,7 @@ class FilterCoCoAnnEntities:
         print("\nFiltering {} split...".format(split))
         counter = 0
         for annotate in tqdm(self.coco_annotates[split]):
-            image_id = annotate["image_id"]
+            image_id = self.get_image_id(annotate)
             if image_id in self.coco_entities[split]:
                 caption_list = annotate["caption"]                
                 entities = self.coco_entities[split][image_id]  # {image_id: entities dict of all captions}
@@ -174,7 +173,7 @@ class FilterCoCoAnnEntities:
 if __name__ == "__main__":
     ann_root = "/root/Documents/DATASETS/MS_COCO/annotations"
     entities_path = "/root/Documents/DATASETS/CoCo_Entities/coco_entities_release.json"
-    save_path = "/root/Documents/DATASETS/CoCo_Entities/coco_filterd"
+    save_path = "/root/Documents/DATASETS/CoCo_Entities/CoCo_Entities_Filtered"
     
     coco_filtered = FilterCoCoAnnEntities(ann_root, entities_path)
     coco_filtered.save_coco_filtered(save_path)
