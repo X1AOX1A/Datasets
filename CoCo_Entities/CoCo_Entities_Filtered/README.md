@@ -1,6 +1,6 @@
 # Filter the CoCo dataset
 
-Given the CoCo annotations and CoCo entities, we filter the CoCo annotations that contain all caption-entities recorded in the CoCo entities.
+Given the [CoCo annotations](https://github.com/X1AOX1A/Datasets/tree/main/MS_COCO) and [CoCo entities](https://github.com/X1AOX1A/Datasets/tree/main/CoCo_Entities), we filter the CoCo annotations that contain all caption-entities recorded in the CoCo entities.
 
 - Filtered train samples: 545224 out of 566747.
 - Filtered val samples: 4269 out of 5000.
