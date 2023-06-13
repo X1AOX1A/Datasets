@@ -2,8 +2,13 @@
 
 Given the CoCo annotations and CoCo entities, we filter the CoCo annotations that contain all caption-entities recorded in the CoCo entities.
 
-- For the details, please refer to this [script](./filter_coco_ann_entities.py).
+- Filtered train samples: 545224 out of 566747.
+- Filtered val samples: 4269 out of 5000.
+- Filtered test samples: 4223 out of 5000.
 
+## Build the Dataset
+
+- To filter the CoCo annotations and CoCo entities, please refer to this [script](./filter_coco_ann_entities.py).
 - The filtered CoCo annotations and entities are stored in [annotations](./annotations) and [entities](./entities) respectively, as shown below.
 
 ```
