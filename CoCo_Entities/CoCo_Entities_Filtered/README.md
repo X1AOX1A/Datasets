@@ -51,7 +51,7 @@ save_path/
         },
         ...
     ]
-```
+    ```
 
 - The entities file are aligned with the annotations file, where each line is a json object, here is an example from the `entities/coco_entities_test.json`:
 
