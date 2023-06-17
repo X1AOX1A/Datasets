@@ -10,11 +10,16 @@ class FilterCoCoAnnEntities:
         self.coco_entities = self.read_coco_entities(entities_path)
         self.coco_annotates_filtered = {"train": [], "val": [], "test": []}
         self.coco_entities_filtered = {"train": [], "val": [], "test": []}
+        self.ground_truth = {"val": [], "test": []}
 
         # only keep the records with all entities found
         self.filter_train()
         self.filter_val("val")
         self.filter_val("test")
+
+        # create ground truth
+        self.create_ground_truth("val")
+        self.create_ground_truth("test")
 
     def read_coco_annotations(self, ann_root):
         # Read the annotations of MS COCO dataset.
@@ -78,13 +83,13 @@ class FilterCoCoAnnEntities:
         return None
     
     def get_image_id(self, ann):
-        return str(int(ann["image"].split('_')[-1].split('.')[0]))
+        return int(ann["image"].split('_')[-1].split('.')[0])
 
     def filter_train(self):
         print("\nFiltering train split...")
         counter = 0
         for annotate in tqdm(self.coco_annotates["train"]):
-            image_id = self.get_image_id(annotate)
+            image_id = str(self.get_image_id(annotate))
             if image_id in self.coco_entities["train"]:
                 caption = annotate["caption"]
                 entities = self.coco_entities["train"][image_id]
@@ -101,7 +106,7 @@ class FilterCoCoAnnEntities:
         print("\nFiltering {} split...".format(split))
         counter = 0
         for annotate in tqdm(self.coco_annotates[split]):
-            image_id = self.get_image_id(annotate)
+            image_id = str(self.get_image_id(annotate))
             if image_id in self.coco_entities[split]:
                 caption_list = annotate["caption"]                
                 entities = self.coco_entities[split][image_id]  # {image_id: entities dict of all captions}
@@ -120,6 +125,30 @@ class FilterCoCoAnnEntities:
                     self.coco_entities_filtered[split].append(matched_entities_dict)
         
         print("#Filtered {} samples: {} out of {}".format(split, counter, len(self.coco_annotates[split])))
+
+
+    def create_ground_truth(self, split="val"):
+        print("\nCreating ground truth for {} split...".format(split))
+        coco_gt = {"annotations": [], "images": []}
+        idx = 0
+        for ann in self.coco_annotates_filtered[split]:
+            image_id = self.get_image_id(ann)
+            caption_list = ann["caption"]
+            
+            coco_gt["images"].append({"id": image_id})
+            for caption in caption_list:
+                idx += 1
+                coco_gt["annotations"].append(
+                    {
+                        "image_id": image_id,
+                        "caption": caption,
+                        "id": idx,
+                    }
+                )
+        self.ground_truth[split] = coco_gt
+        print("#Ground truth captions: {}".format(len(coco_gt["annotations"])))
+        print("#Ground truth images: {}".format(len(coco_gt["images"])))
+
         
     def save_coco_filtered(self, save_path):
         # Save the filtered annotations and entities
@@ -131,10 +160,13 @@ class FilterCoCoAnnEntities:
         #    │   ├── coco_karpathy_train.json
         #    │   ├── coco_karpathy_val.json
         #    │   └── coco_karpathy_test.json
-        #    └── entities
-        #        ├── coco_entities_train.json
-        #        ├── coco_entities_val.json
-        #        └── coco_entities_test.json
+        #    ├── entities
+        #    │   ├── coco_entities_train.json
+        #    │   ├── coco_entities_val.json
+        #    │   └── coco_entities_test.json
+        #    └── ground_truth
+        #        ├── coco_karpathy_val_gt.json
+        #        └── coco_karpathy_test_gt.json
 
         # save the filtered annotations
         print("\nSaving the filtered CoCo annotations...")
@@ -146,7 +178,7 @@ class FilterCoCoAnnEntities:
             "test": 'coco_karpathy_test.json',
         }      
         for split, file in annotations_splits.items():
-            print("- Saving {} to {}...".format(split, os.path.join(annotations_path, file)))
+            print("- Saving {} split to {}...".format(split, os.path.join(annotations_path, file)))
             json.dump(
                 self.coco_annotates_filtered[split], 
                 open(os.path.join(annotations_path, file), "w")
@@ -162,11 +194,26 @@ class FilterCoCoAnnEntities:
             "test": 'coco_entities_test.json',
         }
         for split, file in entities_splits.items():
-            print("- Saving {} to {}...".format(split, os.path.join(entities_path, file)))
+            print("- Saving {} split to {}...".format(split, os.path.join(entities_path, file)))
             json.dump(
                 self.coco_entities_filtered[split], 
                 open(os.path.join(entities_path, file), "w")
             )        
+
+        # save the ground truth
+        print("\nSaving the ground truth...")
+        ground_truth_path = os.path.join(save_path, "ground_truth")
+        os.makedirs(ground_truth_path, exist_ok=True)
+        ground_truth_splits = {
+            "val": 'coco_karpathy_val_gt.json',
+            "test": 'coco_karpathy_test_gt.json',
+        }
+        for split, file in ground_truth_splits.items():
+            print("- Saving {} split to {}...".format(split, os.path.join(ground_truth_path, file)))
+            json.dump(
+                self.ground_truth[split], 
+                open(os.path.join(ground_truth_path, file), "w")
+            )
 
         print("Done!")
     
