@@ -108,15 +108,6 @@ CrowdCaption/
 ├── crowdcaption_images.zip
 │  
 └── crowdcaption.json
-│  
-└── features_fasterrcnn/
-    ├── part1.zip/
-    └── part2.zip/
-│  
-└── features_hrnet_keypoints
-    ├── part01.zip/
-    ├──  ...
-    └── part09.zip/
 ```
 
 ## Statistics
