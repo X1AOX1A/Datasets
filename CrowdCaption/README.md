@@ -106,7 +106,10 @@ The directory structure of the dataset is as follows:
 ```
 CrowdCaption/
 ├── crowdcaption_images.zip
-│  
+│  ├── crowdhuman2021/
+│  │  ├── 00000000.jpg
+│  │  ├── 000xxxxx.jpg
+│  │  ├── 00011350.jpg
 └── crowdcaption.json
 ```
 
