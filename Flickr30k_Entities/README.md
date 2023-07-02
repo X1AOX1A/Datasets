@@ -25,23 +25,27 @@ We have a list of the captions in the dataset that do not relate to the images t
 
 ## Data Example
 
+<div style="text-align: center;">
+  <img src="../Examples/Flickr30k_Entities/example.jpeg" alt="example" width="100%">
+</div>
+
 - `[/LANG#ID/ENTITY_TAG noun chunck]`
 
-```
-[/EN#137644/people A group of friends] playing [/EN#137645/other cards] and trying to bluff [/EN#0/notvisual each other] into making [/EN#137650/other a terrible mistake] .
-[/EN#137644/people A group of college students] gathers to play [/EN#137648/other texas] hold [/EN#137651/other em] [/EN#137647/other poker] .
-[/EN#137644/people Several men] play [/EN#137645/other cards] while around [/EN#137645/other a green table] .
-[/EN#137644/people A group of several men] playing [/EN#137646/other poker] .
-[/EN#137644/people Six white males] playing [/EN#137647/other poker] .
-```
+    ```
+    [/EN#137644/people A group of friends] playing [/EN#137645/other cards] and trying to bluff [/EN#0/notvisual each other] into making [/EN#137650/other a terrible mistake] .
+    [/EN#137644/people A group of college students] gathers to play [/EN#137648/other texas] hold [/EN#137651/other em] [/EN#137647/other poker] .
+    [/EN#137644/people Several men] play [/EN#137645/other cards] while around [/EN#137645/other a green table] .
+    [/EN#137644/people A group of several men] playing [/EN#137646/other poker] .
+    [/EN#137644/people Six white males] playing [/EN#137647/other poker] .
+    ```
 
-```
-[/EN#26283/people A little girl] wearing [/EN#26287/clothing a pink shirt] and [/EN#26288/clothing backpack] is pushing [/EN#26285/people a little boy] wearing [/EN#26286/clothing a green shirt] in [/EN#26284/other a blue stroller] .
-[/EN#26283/people A little girl] in [/EN#26287/clothing a pink outfit] pushing [/EN#26285/people a little boy] in [/EN#26286/clothing a green outfit] in [/EN#26284/other a stroller] .
-[/EN#26283/people A girl] in [/EN#26287/clothing a pink outfit] pushing [/EN#26284/other a blue stroller] with [/EN#26285/people a boy] sitting in [/EN#0/notvisual it] .
-[/EN#26283/people Little girl] with [/EN#26288/clothing backpack] pushing [/EN#26285/people brother] in [/EN#26284/other stroller] .
-[/EN#26283/people A child] pushing [/EN#26285/people their younger sibling] in [/EN#26284/other a stroller] .
-```
+    ```
+    [/EN#26283/people A little girl] wearing [/EN#26287/clothing a pink shirt] and [/EN#26288/clothing backpack] is pushing [/EN#26285/people a little boy] wearing [/EN#26286/clothing a green shirt] in [/EN#26284/other a blue stroller] .
+    [/EN#26283/people A little girl] in [/EN#26287/clothing a pink outfit] pushing [/EN#26285/people a little boy] in [/EN#26286/clothing a green outfit] in [/EN#26284/other a stroller] .
+    [/EN#26283/people A girl] in [/EN#26287/clothing a pink outfit] pushing [/EN#26284/other a blue stroller] with [/EN#26285/people a boy] sitting in [/EN#0/notvisual it] .
+    [/EN#26283/people Little girl] with [/EN#26288/clothing backpack] pushing [/EN#26285/people brother] in [/EN#26284/other stroller] .
+    [/EN#26283/people A child] pushing [/EN#26285/people their younger sibling] in [/EN#26284/other a stroller] .
+    ```
 
 ## Download Links
 
@@ -58,21 +62,24 @@ watch -n 1 tail nohup.out
 
 - The downloaded files are structured as follows:
 
-```
-Flickr30k_Entities/
-    annotations.zip             28M
-    train.txt                   316K
-    val.txt                     12K 
-    test.txt                    12K 
-    UNRELATED_CAPTIONS          4.0K
-    flickr30k_entities_utils.py 8.0K
-    getAnnotations.m            4.0K
-    getSentenceData.m           4.0K
-```
+    ```
+    Flickr30k_Entities/
+        annotations.zip             28M
+        train.txt                   316K
+        val.txt                     12K 
+        test.txt                    12K 
+        UNRELATED_CAPTIONS          4.0K
+        flickr30k_entities_utils.py 8.0K
+        getAnnotations.m            4.0K
+        getSentenceData.m           4.0K
+    ```
 
 ## Statistics
 
-NA
+
+<div style="text-align: center;">
+  <img src="../Examples/Flickr30k_Entities/statistics.png" alt="statistics" width="60%">
+</div>
 
 ## Matlab Interface
 
@@ -94,4 +101,5 @@ The python interface to parse out data files follow the same format as the Matla
 
 ## Reference
 
-- [Ref](https://github.com/BryanPlummer/flickr30k_entities)
+- [Github](https://github.com/BryanPlummer/flickr30k_entities)
+- [Paper](https://arxiv.org/abs/1505.04870)
