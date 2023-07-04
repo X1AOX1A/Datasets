@@ -35,6 +35,8 @@ save_path/
 
 ## Data Example
 
+- Here is a [overview](./notebooks/Overview.ipynb) and [data analysis](./notebooks/Data_Analysis.ipynb) of the dataset.  We provide move image examples in the [this notebook](./notebooks/Examples.ipynb).
+
 ![tesxt_idx0](../../Examples/CoCo_Entities/test_idx0.png)
 
 - The annotations file are keeping the same format as the original CoCo annotations, here is an example from the `annotations/coco_karpathy_test.json`:
