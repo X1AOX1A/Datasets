@@ -97,6 +97,7 @@ class FilterCoCoAnnEntities:
                 if matched_caption:
                     counter += 1
                     matched_entities = entities[matched_caption]
+                    matched_entities["det_caption"] = matched_caption
                     self.coco_annotates_filtered["train"].append(annotate)
                     self.coco_entities_filtered["train"].append({caption: matched_entities})
 
@@ -116,7 +117,9 @@ class FilterCoCoAnnEntities:
                     if not matched_caption:
                         break   # we only keep the samples with all entities found
                     else:
-                        matched_entities_dict[caption] = entities[matched_caption]
+                        matched_entities = entities[matched_caption]
+                        matched_entities["det_caption"] = matched_caption
+                        matched_entities_dict[caption] = matched_entities
 
                 # we only keep the samples with all entities found
                 if len(caption_list)==len(matched_entities_dict):
