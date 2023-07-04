@@ -64,14 +64,18 @@ watch -n 1 tail nohup.out
 
     ```
     Flickr30k_Entities/
-        annotations.zip             28M
-        train.txt                   316K
-        val.txt                     12K 
-        test.txt                    12K 
-        UNRELATED_CAPTIONS          4.0K
-        flickr30k_entities_utils.py 8.0K
-        getAnnotations.m            4.0K
-        getSentenceData.m           4.0K
+    |-- [1004K] Annotations/        # contains xml files with bounding boxes
+    |-- [1004K] Sentences/          # contains txt files with grounded captions
+    |-- [5.1K]  README.md
+    |-- [ 303]  UNRELATED_CAPTIONS
+    |-- [ 28M]  annotations.zip
+    |-- [1.0K]  download_datasets.sh
+    |-- [4.3K]  flickr30k_entities_utils.py
+    |-- [3.8K]  getAnnotations.m
+    |-- [3.4K]  getSentenceData.m
+    |-- [ 10K]  test.txt            # contains index for test set
+    |-- [313K]  train.txt           # contains index for train set
+    `-- [ 11K]  val.txt             # contains index for validation set
     ```
 
 ## Statistics

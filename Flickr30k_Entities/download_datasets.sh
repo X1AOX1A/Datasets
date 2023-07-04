@@ -6,6 +6,9 @@ wget https://github.com/BryanPlummer/flickr30k_entities/raw/master/UNRELATED_CAP
 echo "Downloading annotations.zip..."
 wget https://github.com/BryanPlummer/flickr30k_entities/raw/master/annotations.zip
 
+echo "Unziping annotations.zip..."
+unzip annotations.zip
+
 echo "Downloading flickr30k_entities_utils.py..."
 wget https://github.com/BryanPlummer/flickr30k_entities/raw/master/flickr30k_entities_utils.py
 
