@@ -35,7 +35,7 @@ save_path/
 
 ## Data Example
 
-- Here is a [overview](./notebooks/Overview.ipynb) and [data analysis](./notebooks/Data_Analysis.ipynb) of the dataset.  We provide move image examples in the [this notebook](./notebooks/Examples.ipynb).
+- Here is an [overview](./notebooks/Overview.ipynb) and a [data analysis](./notebooks/Data_Analysis.ipynb) of the dataset.  We provide more image examples in the [this notebook](./notebooks/Examples.ipynb).
 
 ![tesxt_idx0](../../Examples/CoCo_Entities/test_idx0.png)
 
