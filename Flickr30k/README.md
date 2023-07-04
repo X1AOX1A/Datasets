@@ -21,6 +21,8 @@ kaggle config set -n path -v /path/to/your/kaggle.json
 kaggle datasets download -d hsankesara/flickr-image-dataset -p "./"
 unzip flickr-image-dataset.zip
 mkdir ./images
+# move flickr30k_images/results.csv to ./
+mv flickr30k_images/results.csv ./
 # move flickr30k_images/flickr30k_images/flickr30k_images/* to ./images
 find flickr30k_images/flickr30k_images/flickr30k_images/ -name "*.jpg" | xargs -i mv {} ./images/
 # count this number of images downloaded
@@ -33,9 +35,10 @@ rm -rf flickr30k_images
 
     ```
     Flickr30k/
-    |-- [1.3K]  README.md
+    |-- [1.5K]  README.md
     |-- [8.2G]  flickr-image-dataset.zip
-    `-- [1004K]  images/    # 31783 jpg images in total
+    |-- [1004K]  images         # 31783 jpg images in total 
+    `-- [ 13M]  results.csv     # the annotations of the images
     ```
 
 ## Statistics
