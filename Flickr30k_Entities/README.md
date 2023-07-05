@@ -39,15 +39,7 @@ We have a list of the captions in the dataset that do not relate to the images t
     [/EN#137644/people A group of several men] playing [/EN#137646/other poker] .
     [/EN#137644/people Six white males] playing [/EN#137647/other poker] .
     ```
-
-    ![65567](../Examples/Flickr30k_Entities/65567.jpg)
-    ```
-    [/EN#255542/people A bearded man] , and [/EN#255543/people a girl] in [/EN#255550/clothing a red dress] are getting married .
-    [/EN#255544/people The group of people] are assembling for [/EN#255546/other a wedding] .
-    [/EN#255542/people a man] and [/EN#255543/people woman] dressed for [/EN#255546/other a wedding function] .
-    [/EN#255543/people A woman] holds [/EN#255545/bodyparts/people a man 's arm] at [/EN#255549/scene a formal event] .
-    [/EN#255547/other A wedding party] walks out of [/EN#255548/scene a building] .
-    ```
+    - For more data samples, please ref to this [markdown](./data_samples.md).
 
 ## Download Links
 
