@@ -42,11 +42,11 @@ We have a list of the captions in the dataset that do not relate to the images t
 
     ![65567](../Examples/Flickr30k_Entities/65567.jpg)
     ```
-    [/EN#26283/people A little girl] wearing [/EN#26287/clothing a pink shirt] and [/EN#26288/clothing backpack] is pushing [/EN#26285/people a little boy] wearing [/EN#26286/clothing a green shirt] in [/EN#26284/other a blue stroller] .
-    [/EN#26283/people A little girl] in [/EN#26287/clothing a pink outfit] pushing [/EN#26285/people a little boy] in [/EN#26286/clothing a green outfit] in [/EN#26284/other a stroller] .
-    [/EN#26283/people A girl] in [/EN#26287/clothing a pink outfit] pushing [/EN#26284/other a blue stroller] with [/EN#26285/people a boy] sitting in [/EN#0/notvisual it] .
-    [/EN#26283/people Little girl] with [/EN#26288/clothing backpack] pushing [/EN#26285/people brother] in [/EN#26284/other stroller] .
-    [/EN#26283/people A child] pushing [/EN#26285/people their younger sibling] in [/EN#26284/other a stroller] .
+    [/EN#255542/people A bearded man] , and [/EN#255543/people a girl] in [/EN#255550/clothing a red dress] are getting married .
+    [/EN#255544/people The group of people] are assembling for [/EN#255546/other a wedding] .
+    [/EN#255542/people a man] and [/EN#255543/people woman] dressed for [/EN#255546/other a wedding function] .
+    [/EN#255543/people A woman] holds [/EN#255545/bodyparts/people a man 's arm] at [/EN#255549/scene a formal event] .
+    [/EN#255547/other A wedding party] walks out of [/EN#255548/scene a building] .
     ```
 
 ## Download Links
