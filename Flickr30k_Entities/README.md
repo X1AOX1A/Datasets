@@ -31,6 +31,7 @@ We have a list of the captions in the dataset that do not relate to the images t
 
 - `[/LANG#ID/ENTITY_TAG noun chunck]`
 
+    ![36979](../Examples/Flickr30k_Entities/36979.jpg)
     ```
     [/EN#137644/people A group of friends] playing [/EN#137645/other cards] and trying to bluff [/EN#0/notvisual each other] into making [/EN#137650/other a terrible mistake] .
     [/EN#137644/people A group of college students] gathers to play [/EN#137648/other texas] hold [/EN#137651/other em] [/EN#137647/other poker] .
@@ -39,6 +40,7 @@ We have a list of the captions in the dataset that do not relate to the images t
     [/EN#137644/people Six white males] playing [/EN#137647/other poker] .
     ```
 
+    ![65567](../Examples/Flickr30k_Entities/65567.jpg)
     ```
     [/EN#26283/people A little girl] wearing [/EN#26287/clothing a pink shirt] and [/EN#26288/clothing backpack] is pushing [/EN#26285/people a little boy] wearing [/EN#26286/clothing a green shirt] in [/EN#26284/other a blue stroller] .
     [/EN#26283/people A little girl] in [/EN#26287/clothing a pink outfit] pushing [/EN#26285/people a little boy] in [/EN#26286/clothing a green outfit] in [/EN#26284/other a stroller] .
