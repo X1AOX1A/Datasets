@@ -4,6 +4,7 @@
 mkdir -p "download"
 mkdir -p "images"
 mkdir -p "annotations"
+mkdir -p "ground_truth"
 
 # Loop through each link
 declare -A links=(
@@ -39,6 +40,18 @@ urls=(
 for url in "${urls[@]}"
 do
   wget "$url" -P "annotations/"
+done
+
+# Download the ground truth
+echo "Downloading ground truth..."
+urls=(
+    "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val_gt.json"
+    "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_test_gt.json"
+)
+
+for url in "${urls[@]}"
+do
+  wget "$url" -P "ground_truth/"
 done
 
 echo "Download and extraction completed!"

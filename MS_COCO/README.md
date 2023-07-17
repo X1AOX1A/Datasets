@@ -76,6 +76,11 @@ annotations = {
   "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val.json",
   "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_test.json",
 }
+
+ground_truth = {
+    "val": "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val_gt.json",
+    "test": "https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_test_gt.json",
+}
 ```
 - Ref: [lavis/datasets/download_scripts/download_coco.py](https://github.com/salesforce/LAVIS/blob/main/lavis/datasets/download_scripts/download_coco.py)
 
@@ -101,11 +106,14 @@ MS_COCO/
 |   |-- [ 12G]  test2015.zip
 |   |-- [ 13G]  train2014.zip
 |   `-- [6.2G]  val2014.zip
+|-- [  73]  ground_truth
+|   |-- [2.5M]  coco_karpathy_test_gt.json
+|   `-- [2.5M]  coco_karpathy_val_gt.json
 `-- [  90]  images
-    |-- [2.3M]  test
+    |-- [2.3M]  test2014
     |-- [6.6M]  test2015
-    |-- [6.8M]  train
-    `-- [2.4M]  val
+    |-- [6.8M]  train2014
+    `-- [2.4M]  val2014
 ```
 
 ## Statistics
