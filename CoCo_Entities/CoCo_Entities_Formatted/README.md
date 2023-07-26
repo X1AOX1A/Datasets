@@ -7,6 +7,8 @@
 
 ![coco entities](https://github.com/aimagelab/show-control-and-tell/raw/master/images/coco_entities.png)
 
+![COCO_train2014_000000520208](../../Examples/CoCo_Entities/COCO_train2014_000000520208.jpg)
+
 ```
 "520208": {
     "a spoon sitting on some food in a bowl": {
@@ -128,6 +130,8 @@ We format the dataset into following format:
 
     <details>
     <summary>Click to view the formatted valid example</summary>
+
+    ![COCO_val2014_000000184613.jpg](../../Examples/CoCo_Entities/COCO_val2014_000000184613.jpg)
 
     ```
     [

@@ -22,6 +22,8 @@ In details, for each image-caption pair, we provide the following information:
 
 ![coco entities](https://github.com/aimagelab/show-control-and-tell/raw/master/images/coco_entities.png)
 
+![COCO_train2014_000000520208](../Examples/CoCo_Entities/COCO_train2014_000000520208.jpg)
+
 ```
 "520208": {
     "a spoon sitting on some food in a bowl": {
@@ -51,7 +53,16 @@ In details, for each image-caption pair, we provide the following information:
     }, 
     "a white bowl filled with mixed vegetables and a spoon": {
         "det_sequences": ["bowl", "bowl", "bowl", null, null, "potatoes", "potatoes", null, "spoon", "spoon"], 
-        "noun_chunks": [["a white bowl", "bowl"], ["mixed vegetables", "potatoes"], ["a spoon", "spoon"]], "detections": {"bowl": [[1, [12.056884765625, 32.955543518066406, 594.0037231445312, 464.70672607421875]]], "potatoes": [[4, [261.80291748046875, 0.0, 639.2000122070312, 230.02053833007812]], [9, [26.407129287719727, 72.50532531738281, 400.67034912109375, 243.777099609375]]], "spoon": [[2, [0.0, 234.5964813232422, 477.697021484375, 479.20001220703125]], [14, [259.7029724121094, 215.28146362304688, 555.7696533203125, 395.4397277832031]]]}, "split": "train"
+        "noun_chunks": 
+            [["a white bowl", "bowl"], 
+            ["mixed vegetables", "potatoes"], 
+            ["a spoon", "spoon"]], 
+        "detections": {
+            "bowl": [[1, [12.056884765625, 32.955543518066406, 594.0037231445312, 464.70672607421875]]], 
+            "potatoes": [[4, [261.80291748046875, 0.0, 639.2000122070312, 230.02053833007812]], [9, [26.407129287719727, 72.50532531738281, 400.67034912109375, 243.777099609375]]], 
+            "spoon": [[2, [0.0, 234.5964813232422, 477.697021484375, 479.20001220703125]], [14, [259.7029724121094, 215.28146362304688, 555.7696533203125, 395.4397277832031]]]
+        }, 
+        "split": "train"
     }, 
     "there is a spoons resting in a bowl of food": {
         "det_sequences": [null, null, "spoon", "spoon", null, null, "bowl", "bowl", null, "food"], 
