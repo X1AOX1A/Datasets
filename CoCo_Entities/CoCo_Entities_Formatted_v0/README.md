@@ -191,7 +191,7 @@ We format the dataset into following format:
     ```
     export coco_entities_file="/root/Documents/DATASETS/CoCo_Entities/coco_entities_release.json"
     export coco_images_root="/root/Documents/DATASETS/MS_COCO/images"
-    export save_path="/root/Documents/DATASETS/CoCo_Entities/CoCo_Entities_Formatted/annotations"
+    export save_path="/root/Documents/DATASETS/CoCo_Entities/CoCo_Entities_Formatted_v0/annotations"
     python format_coco_entities.py --coco_entities_file $coco_entities_file --coco_images_root $coco_images_root --save_path $save_path
     ```
     - `coco_entities_file`: path to the raw CoCo Entities json file
