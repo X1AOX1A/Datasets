@@ -194,17 +194,26 @@ class DataProcessor:
         image_num = 0
         for image_id in tqdm(self.splits["train"]):
             example = copy(self.examples[image_id])
+            image = example["image"]
+            image_id = example["image_id"]
+            image_size = example["image_size"]
             annotations = example["annotations"]
+            boxes = example["boxes"]
             # Drop the no box entity incide the annotations[{"entities"}]
             if filter_no_box_entity:
-                annotations = self.drop_no_box_entity(image_id, annotations)
+                annotations = self.drop_no_box_entity(str(image_id), annotations)
             if annotations is not None:
                 image_num += 1
                 # split annotations into samples
                 for annotation in annotations:
-                    sample = example
-                    sample["annotations"] = [annotation]
-                    self.processed["train"].append(sample)
+                    example_ = {
+                        "image_id": image_id,
+                        "image": image,
+                        "image_size": image_size,
+                        "annotations": [annotation],
+                        "boxes": boxes,
+                    }
+                    self.processed["train"].append(example_)
         sample_num = cap_num = len(self.processed["train"])
         self.stats["train"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# train [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
@@ -219,14 +228,23 @@ class DataProcessor:
         cap_num = 0   
         for image_id in tqdm(self.splits[split]):
             example = copy(self.examples[image_id])
+            image = example["image"]
+            image_id = example["image_id"]
+            image_size = example["image_size"]
             annotations = example["annotations"]
+            boxes = example["boxes"]
             # Drop the no box entity incide the annotations[{"entities"}]
             if filter_no_box_entity:
-                annotations = self.drop_no_box_entity(image_id, annotations)
+                annotations = self.drop_no_box_entity(str(image_id), annotations)
             if annotations is not None:
-                sample = example
-                sample["annotations"] = annotations
-                self.processed[split].append(sample)
+                example_ = {
+                    "image_id": image_id,
+                    "image": image,
+                    "image_size": image_size,
+                    "annotations": annotations,
+                    "boxes": boxes,
+                }
+                self.processed[split].append(example_)
                 cap_num += len(annotations)
         sample_num = image_num = len(self.processed[split])
         self.stats[split] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
@@ -332,17 +350,13 @@ class DataProcessor:
 
 import argparse
 if __name__ == "__main__":
-    # argparser = argparse.ArgumentParser()
-    # argparser.add_argument("--coco_entities_file", type=str, required=True)
-    # argparser.add_argument("--coco_images_root", type=str, required=True)
-    # argparser.add_argument("--save_path", type=str, default="./")
-    # args = argparser.parse_args()
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument("--coco_entities_file", type=str, required=True)
+    argparser.add_argument("--coco_images_root", type=str, required=True)
+    argparser.add_argument("--save_path", type=str, default="./")
+    args = argparser.parse_args()
     
-    # processor = DataProcessor(args.coco_entities_file, args.coco_images_root, args.save_path)
-    coco_entities_file = "/root/Documents/DATASETS/CoCo_Entities/coco_entities_release.json"
-    coco_images_root = "/root/Documents/DATASETS/MS_COCO/images"
-    save_path = "/root/Documents/DATASETS/CoCo_Entities/CoCo_Entities_Formatted/annotations"
-    processor = DataProcessor(coco_entities_file, coco_images_root, save_path)
+    processor = DataProcessor(args.coco_entities_file, args.coco_images_root, args.save_path)
     processor.read_coco_entities()
     processor.load_splits()         # self.splits = {"train": [image_id], "val": [image_id], "test": [image_id]}
     processor.load_image_name()     # self.image = {image_id: image_name}
