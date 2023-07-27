@@ -103,7 +103,7 @@ We do a [data analysis](./notebooks/data_analysis.ipynb) on the CoCo Entities da
 
 We processed the dataset into following format:
 
-```json
+```
 [
     {
         "image_id" (int): image_id,
@@ -195,7 +195,7 @@ We processed the dataset into following format:
     <details>
     <summary>Click to view the example</summary>
 
-    ```json
+    ```
     [
         {
             'image_id': 57870, 
@@ -247,7 +247,7 @@ We processed the dataset into following format:
     <details>
     <summary>Click to view the example</summary>
 
-    ```json
+    ```
     [
         {
             'image_id': 391895, 
@@ -319,7 +319,7 @@ We processed the dataset into following format:
     <details>
     <summary>Click to view the example</summary>
 
-    ```json
+    ```
     [
         {
             'image_id': 391895, 'image': 'val2014/COCO_val2014_000000391895.jpg', 
