@@ -3,6 +3,7 @@ import sys
 import json
 import numpy as np
 import xml.etree.ElementTree as ET
+from copy import deepcopy as copy
 
 try:
     from loguru import logger as logging
@@ -155,6 +156,8 @@ class DataProcessor:
             with open(file_path, "r") as f:
                 self.splits[split] = [line.strip() for line in f.readlines()]
                 assert len(self.splits[split]) == len(set(self.splits[split]))
+                logging.info(f"Loaded {len(self.splits[split])} {split} images.")
+        logging.info("Done.")
 
     def load_annotations(self):
         annotations_path = os.path.join(self.flickr_entities_root, "Annotations")
@@ -162,7 +165,6 @@ class DataProcessor:
         self.image = {}
         self.image_size = {}
         self.boxes = {}
-        self.no_box = {}
         for file in os.listdir(annotations_path):
             ann_path = os.path.join(annotations_path, file)
             image_id = file.split(".")[0]   # str
@@ -170,8 +172,29 @@ class DataProcessor:
             self.image[image_id] = annotation["filename"]
             self.image_size[image_id] = [annotation["width"], annotation["height"], annotation["depth"]]
             self.boxes[image_id] = annotation["boxes"]
-            # self.no_box[image_id] = annotation["nobox"]
-            # self.scene[image_id] = annotation["scene"]
+
+    def load_sentences(self):
+        """Load sentences of all images
+        """
+        sentences_path = os.path.join(self.flickr_entities_root, "Sentences")
+        logging.info(f"Loading sentences from {sentences_path}...") 
+        self.annotations = {}
+        # read all txt files in the folder, with file name as the key and content as the value
+        for file in os.listdir(sentences_path):
+            annotations = get_sentence_data(os.path.join(sentences_path, file))
+            image_id = file.split(".")[0]            
+            self.annotations[image_id] = annotations
+    
+    def process_examples(self):
+        logging.info("Processing examples...") 
+        self.examples = {}
+        for image_id in self.annotations.keys():
+            self.examples[image_id] = {}
+            self.examples[image_id]["image_id"] = int(image_id)
+            self.examples[image_id]["image"] = self.image[image_id]
+            self.examples[image_id]["image_size"] = self.image_size[image_id]
+            self.examples[image_id]["annotations"] = self.annotations[image_id]
+            self.examples[image_id]["boxes"] = self.boxes[image_id]
 
     def drop_no_box_entity(self, image_id, annotations):
         """Drop entities that have no box (e.g. no_box, scene)
@@ -183,7 +206,7 @@ class DataProcessor:
                 None, if none of the annotation has entity left
         """
         new_annotations = []
-        for i, ann in enumerate(annotations):
+        for ann in annotations:
             entities = []
             for entity in ann["entities"]:
                 if entity["box_id"] in self.boxes[image_id]:
@@ -195,50 +218,27 @@ class DataProcessor:
             return new_annotations
         else:
             self.dropped_samples.append(image_id)
-            logging.debug(f"Image '{image_id}' has no annotations left.")
+            logging.debug(f"Image '{image_id}' has no annotation left.")
             return None
 
-    def load_sentences(self, filter_no_box_entity=True):
-        """Load sentences of all images
-        """
-        sentences_path = os.path.join(self.flickr_entities_root, "Sentences")
-        logging.info(f"Loading sentences from {sentences_path}...") 
-        self.annotations = {}
-        # read all txt files in the folder, with file name as the key and content as the value
-        if filter_no_box_entity: 
-            logging.info("Filter not box entity is enable.")
-        for file in os.listdir(sentences_path):
-            annotations = get_sentence_data(os.path.join(sentences_path, file))
-            image_id = file.split(".")[0]
-            # drop entities that have no box
-            # return None if none of the annotation has entity left
-            if filter_no_box_entity == True:
-                annotations = self.drop_no_box_entity(image_id, annotations)
-            self.annotations[image_id] = annotations
-    
-    def process_examples(self):
-        logging.info("Processing examples...") 
-        self.examples = {}
-        for image_id in self.annotations.keys():
-            self.examples[image_id] = {}
-            self.examples[image_id]["image_id"] = int(image_id)
-            self.examples[image_id]["image"] = self.image[image_id]
-            self.examples[image_id]["image_size"] = self.image_size[image_id]
-            self.examples[image_id]["annotations"] = self.annotations[image_id] # None if all filtered
-            self.examples[image_id]["boxes"] = self.boxes[image_id]
-
-    def process_train(self):     
+    def process_train(self, filter_no_box_entity=True):     
         """Process training samples
         Each sample consists of a image and a caption-entity pair.
         """
         logging.info("Processing train set...")   
+        if filter_no_box_entity: 
+            logging.info("Filter not box entity is enable.")
         image_num = 0
         for image_id in self.splits["train"]:
-            example = self.examples[image_id]
-            if example["annotations"] is not None:
+            example = copy(self.examples[image_id])
+            annotations = example["annotations"]
+            # Drop the no box entity incide the annotations[{"entities"}]
+            if filter_no_box_entity:
+                annotations = self.drop_no_box_entity(image_id, annotations)
+            if annotations is not None:
                 image_num += 1
                 # split annotations into samples
-                for annotation in example["annotations"]:
+                for annotation in annotations:
                     sample = example
                     sample["annotations"] = [annotation]
                     self.processed["train"].append(sample)
@@ -247,29 +247,46 @@ class DataProcessor:
         self.stats["train"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# train [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
 
-    def process_val(self, split="val"):     
+    def process_val(self, split="val", filter_no_box_entity=True):     
         """Process val/test samples
         Each sample consists of a image and mulit caption-entity pairs.
         """
         logging.info(f"Processing {split} set...")
+        if filter_no_box_entity: 
+            logging.info("Filter not box entity is enable.")
         cap_num = 0   
         for image_id in self.splits[split]:
-            example = self.examples[image_id]
-            if example["annotations"] is not None:
-                self.processed[split].append(example)
-                cap_num += len(example["annotations"])
+            example = copy(self.examples[image_id])
+            annotations = example["annotations"]
+            # Drop the no box entity incide the annotations[{"entities"}]
+            if filter_no_box_entity:
+                annotations = self.drop_no_box_entity(image_id, annotations)
+            if annotations is not None:
+                sample = example
+                sample["annotations"] = annotations
+                self.processed[split].append(sample)
+                cap_num += len(annotations)
         sample_num = image_num = len(self.processed[split])
         self.stats[split] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# {split} [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
 
-    def process_test_sct(self):
+    def process_test_sct(self, filter_no_box_entity=True):
         """Process test samples into SCT style.
         Each sample consists of a image and mulit caption-entity pairs **with the
-        same entity tag chunks**.
+        same bbox-sequence **.
             ref to the following link for details:
             https://github.com/aimagelab/show-control-and-tell/blob/master/test_region_sequence.py#L133
         """
 
+        # def contain_no_box_entity(example):
+        #     annotations = example["annotations"]
+        #     for ann in annotations:
+        #         entities = ann["entities"]
+        #         for entity in entities:
+        #             if entity["box_id"] not in example["boxes"]:
+        #                 return True
+        #     return False
+        
         def find_unique_sublists(lst):
             unique_sublists, unique_indexes, unique_inverse = [], [], []
             for i, sublist in enumerate(lst):
@@ -279,34 +296,44 @@ class DataProcessor:
                 unique_inverse.append(unique_sublists.index(sublist))
             return unique_indexes, unique_inverse
         
-        for example in self.processed["test"]:
+        logging.info(f"Processing test_sct set...")
+        if filter_no_box_entity: 
+            logging.info("Filter not box entity is enable.")
+        image_num, cap_num = 0, 0
+        for image_id in self.splits["test"]:
+            example = copy(self.examples[image_id])
             image = example["image"]
             image_id = example["image_id"]
             image_size = example["image_size"]
             annotations = example["annotations"]
-            entity_tags_list = []
-            for ann in annotations:
-                # use box_id to identify the entity
-                entity_tags = [item["box_id"] for item in ann["entities"]]
-                entity_tags_list.append(entity_tags)
-            unique_indexes, unique_inverse = find_unique_sublists(entity_tags_list)
-            unique_inverse = np.array(unique_inverse)   # to use np.where
-            for uni_idx in unique_indexes:
-                annotations_ = [annotations[idx] for idx in np.where(unique_inverse==uni_idx)[0]]
-                example_ = {
-                    "image_id": image_id,
-                    "image": image,
-                    "image_size": image_size,
-                    "annotations": annotations_,
-                }
-                self.processed["test_sct"].append(example_)
+            # Drop the no box entity incide the annotations[{"entities"}]
+            if filter_no_box_entity:
+                annotations = self.drop_no_box_entity(str(image_id), annotations)
+            if annotations is not None:
+                image_num += 1
+                cap_num += len(annotations)
+                # Split annotations with the same bbox sequence into samples
+                box_seq_list = []
+                for ann in annotations:
+                    # use box_id to identify the bbox sequence
+                    box_seq = [item["box_id"] for item in ann["entities"]]
+                    box_seq_list.append(box_seq)
+                unique_indexes, unique_inverse = find_unique_sublists(box_seq_list)
+                unique_inverse = np.array(unique_inverse)   # to use np.where
+                for uni_idx in unique_indexes:
+                    annotations_ = [annotations[idx] for idx in np.where(unique_inverse==uni_idx)[0]]
+                    example_ = {
+                        "image_id": image_id,
+                        "image": image,
+                        "image_size": image_size,
+                        "annotations": annotations_,
+                    }
+                    self.processed["test_sct"].append(example_)
 
         sample_num = len(self.processed["test_sct"])
-        image_num = self.stats["test"]["image_num"]
-        cap_num = self.stats["test"]["cap_num"]
         self.stats["test_sct"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
-        logging.info(f"{sample_num} test_sct samples processed.")
         logging.info(f"# test_sct [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
+    
 
     def save_to_disk(self):
         logging.info("Saving to disk...")
@@ -335,10 +362,10 @@ if __name__ == "__main__":
     processor = DataProcessor(flickr_entities_root, flickr_images_root, save_path)
     processor.load_splits()
     processor.load_annotations()
-    processor.load_sentences(filter_no_box_entity=True)
+    processor.load_sentences()
     processor.process_examples()
-    processor.process_train()
-    processor.process_val("val")
-    processor.process_val("test")
-    processor.process_test_sct()
+    processor.process_train(filter_no_box_entity=True)
+    processor.process_val("val", filter_no_box_entity=True)
+    processor.process_val("test", filter_no_box_entity=True)
+    processor.process_test_sct(filter_no_box_entity=True)
     processor.save_to_disk()
