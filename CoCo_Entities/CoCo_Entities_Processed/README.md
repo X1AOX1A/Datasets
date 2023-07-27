@@ -190,6 +190,18 @@ We processed the dataset into following format:
     - `coco_images_root`: path to the CoCo images root directory
     - `save_path`: path to save the processed CoCo Entities json path
 
+- The processed files are structured as follows: 
+
+    ```
+    save_path/
+    |-- [ 353]  info.json
+    |-- [ 11M]  test.json
+    |-- [9.1M]  test_grouped.json
+    |-- [632M]  train.json
+    |-- [ 11M]  val.json
+    `-- [9.2M]  val_grouped.json
+    ```
+
 
 ### Formatted example:
 
