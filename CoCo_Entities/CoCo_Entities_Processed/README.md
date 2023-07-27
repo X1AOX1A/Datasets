@@ -1,4 +1,4 @@
-# Formatting CoCo Entities
+# Processing CoCo Entities
 
 ## Raw Data Examples
 
@@ -138,7 +138,9 @@ We processed the dataset into following format:
 ### Splits
 
 - CoCo karpathy splits: The original CoCo karpathy splits (`train`, `val`, `test`)
-- Grouped splits: Apart from the the original splits, we further add `val_grouped` and  `test_grouped` splits, which are used for the [Show, Control and Tell](https://arxiv.org/abs/1811.10652) task. The `val_grouped` and `test_grouped` splits are filteted and split from the original `val` and `test` split, respectively. Each sample consists of a image and mulit caption-entity pairs **with the same bbox reference sequence**. For more details, please refer to the [Show, Control and Tell](https://arxiv.org/abs/1811.10652) paper.
+- Grouped splits: Apart from the the original splits, we further add `val_grouped` and  `test_grouped` splits, which are used for the [Show, Control and Tell](https://arxiv.org/abs/1811.10652) task. 
+    - The `val_grouped` and `test_grouped` splits are filteted and split from the original `val` and `test` split, respectively.
+    - Each sample consists of a image and mulit caption-entity pairs **with the same bbox reference sequence**. For more details, please refer to the [Show, Control and Tell](https://arxiv.org/abs/1811.10652) paper.
 
 ### Statistics
 
@@ -154,21 +156,21 @@ We processed the dataset into following format:
 
 ### Process Procedure
 
-- process_train: For `train` set,  we 
-    1. first filter out those entity without bbox reference (e.g., None and "_") (`drop_no_box_entity`). 
+- [process_train](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L187): For `train` set,  we 
+    1. first filter out those entity without bbox reference (e.g., None and "_") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L162)). 
         - If all entity in the annotation are filtered out, we drop the annotation. (*This may decrease the number of captions*)
         - If all annotations are dropped, we drop the sample. (*This may decrease the number of images*)
     2. then we split annotations into caption-annotation pairs.
 
-- process_val: For `val` and `test` set, we 
-    1. filter out those entity without bbox reference (e.g., None and "_") (`drop_no_box_entity`).
+- [process_val](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L221): For `val` and `test` set, we 
+    1. filter out those entity without bbox reference (e.g., None and "_") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L162)).
         - If all entity in the annotation are filtered out, we drop the annotation. (*This may decrease the number of captions*)
         - If all annotations are dropped, we drop the sample. (*This may decrease the number of images*)
 
-- process_val_grouped: For `val_grouped` and `test_grouped` set, we 
-    1. first filter out the annotation that contains `"_"` entities, as [SCT](https://github.com/aimagelab/show-control-and-tell/blob/master/data/dataset.py#L134) done (`drop_no_box_ann`).
+- [process_val_grouped](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L253): For `val_grouped` and `test_grouped` set, we 
+    1. first filter out the annotation that contains `"_"` entities, as [SCT](https://github.com/aimagelab/show-control-and-tell/blob/master/data/dataset.py#L134) done ([drop_no_box_ann](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#262)).
         - *This may decrease the number of captions and images.*
-    2. then we filter out those entity without bbox reference (e.g., None) (`drop_no_box_entity`).
+    2. then we filter out those entity without bbox reference (e.g., None) ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L162)).
         - *This may further decrease the number of captions and images.*
     3. lastly, we group the annotations with the same bbox reference sequence and further split them into samples, as [SCT](https://github.com/aimagelab/show-control-and-tell/blob/master/test_region_sequence.py#L133) done.
         - *This may increase the number of samples, as we split the annotations with the same bbox reference sequence into multiple samples.*
