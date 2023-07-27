@@ -67,8 +67,8 @@ class DataProcessor:
         self.coco_entities_file = coco_entities_file
         self.coco_images_root = coco_images_root
         self.save_path = save_path
-        self.processed = {"train": [], "val": [], "test": [], "test_sct": []}
-        self.stats = {"train": {}, "val": {}, "test": {}, "test_sct": {}}
+        self.processed = {"train": [], "val": [], "test": [], "val_grouped": [], "test_grouped": []}
+        self.stats = {"train": [], "val": [], "test": [], "val_grouped": [], "test_grouped": []}
         self.dropped_samples = []
     
     def read_coco_entities(self):
@@ -205,7 +205,6 @@ class DataProcessor:
                     sample = example
                     sample["annotations"] = [annotation]
                     self.processed["train"].append(sample)
-                    # TODO: clean unless sample["boxes"]
         sample_num = cap_num = len(self.processed["train"])
         self.stats["train"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# train [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
@@ -233,22 +232,32 @@ class DataProcessor:
         self.stats[split] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# {split} [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
     
-    def process_test_sct(self, filter_sample_with_no_box_entity=True):
-        """Process test samples into SCT style.
+    def process_val_grouped(self, split="test", filter_no_box_ann=True):
+        """Process val/test samples into SCT style.
+        Split and group the annotations with the same bbox sequence into samples.
         Each sample consists of a image and mulit caption-entity pairs **with the
         same bbox-sequence **.
             ref to the following link for details:
             https://github.com/aimagelab/show-control-and-tell/blob/master/test_region_sequence.py#L133
         """
 
-        def contain_no_box_entity(example):
-            annotations = example["annotations"]
+        def drop_no_box_ann(image_id, annotations):
+            """Drop annotations that have no box (e.g. "_")
+            Args:
+                image_id (str): the image_id of the annotations
+                annotations (list): the extracted annotations from `load_entities`
+            Returns:
+                annotations (list, None): the filtered annotations
+                    None, if none of the annotation has annotation left
+            """
+            new_annotations = []
             for ann in annotations:
-                entities = ann["entities"]
-                for entity in entities:
-                    if entity["box_id"] not in example["boxes"]:
-                        return True
-            return False
+                # skip the annotations that contains no box ("_") entities
+                if "_" in [entity["box_id"] for entity in ann["entities"]]:
+                    continue
+                new_annotations.append(ann)
+            new_annotations = self.drop_no_box_entity(image_id, new_annotations)
+            return new_annotations
         
         def find_unique_sublists(lst):
             unique_sublists, unique_indexes, unique_inverse = [], [], []
@@ -259,42 +268,45 @@ class DataProcessor:
                 unique_inverse.append(unique_sublists.index(sublist))
             return unique_indexes, unique_inverse
         
-        logging.info(f"Processing test_sct set...")
-        if filter_sample_with_no_box_entity: 
-            logging.info("Filter sample with not box entity is enable.")
+        logging.info(f"Processing {split}_grouped set...")
+        if filter_no_box_ann:
+            logging.info("Filter not box annotations is enable.")
         image_num, cap_num = 0, 0
-        for image_id in tqdm(self.splits["test"]):
+        for image_id in tqdm(self.splits[split]):
             example = copy(self.examples[image_id])
             image = example["image"]
             image_id = example["image_id"]
             image_size = example["image_size"]
             annotations = example["annotations"]
-            # Drop the no box entity incide the annotations[{"entities"}]
-            if filter_sample_with_no_box_entity and contain_no_box_entity(example):
-                continue
-            image_num += 1
-            cap_num += len(annotations)
-            # Group annotations with the same bbox sequence into samples
-            box_seq_list = []
-            for ann in annotations:
-                # use box_id to identify the bbox sequence
-                box_seq = [item["box_id"] for item in ann["entities"]]
-                box_seq_list.append(box_seq)
-            unique_indexes, unique_inverse = find_unique_sublists(box_seq_list)
-            unique_inverse = np.array(unique_inverse)   # to use np.where
-            for uni_idx in unique_indexes:
-                annotations_ = [annotations[idx] for idx in np.where(unique_inverse==uni_idx)[0]]
-                example_ = {
-                    "image_id": image_id,
-                    "image": image,
-                    "image_size": image_size,
-                    "annotations": annotations_,
-                }
-                self.processed["test_sct"].append(example_)
+            boxes = example["boxes"]
+            # Drop annotations that contain no box entities(e.g. "_")
+            if filter_no_box_ann:
+                annotations = drop_no_box_ann(str(image_id), annotations)
+            if annotations is not None:
+                image_num += 1
+                cap_num += len(annotations)
+                # Group annotations with the same bbox sequence into samples
+                box_seq_list = []
+                for ann in annotations:
+                    # use box_id to identify the bbox sequence
+                    box_seq = [item["box_id"] for item in ann["entities"]]
+                    box_seq_list.append(box_seq)
+                unique_indexes, unique_inverse = find_unique_sublists(box_seq_list)
+                unique_inverse = np.array(unique_inverse)   # to use np.where
+                for uni_idx in unique_indexes:
+                    annotations_ = [annotations[idx] for idx in np.where(unique_inverse==uni_idx)[0]]
+                    example_ = {
+                        "image_id": image_id,
+                        "image": image,
+                        "image_size": image_size,
+                        "annotations": annotations_,
+                        "boxes": boxes,
+                    }
+                    self.processed[f"{split}_grouped"].append(example_)
 
-        sample_num = len(self.processed["test_sct"])
-        self.stats["test_sct"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
-        logging.info(f"# test_sct [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
+        sample_num = len(self.processed[f"{split}_grouped"])
+        self.stats[f"{split}_grouped"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
+        logging.info(f"# {split}_grouped [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
 
     def save_to_disk(self):
         logging.info("Saving to disk...")
@@ -302,10 +314,13 @@ class DataProcessor:
             "train": "train.json",
             "val": "val.json",
             "test": "test.json",
-            "test_sct": "test_sct.json",
+            "val_grouped": "val_grouped.json",
+            "test_grouped": "test_grouped.json",
             "info": "info.json",
         }
-        for split in ["train", "val", "test", "test_sct"]:
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
+        for split in ["train", "val", "test", "val_grouped", "test_grouped"]:
             logging.info(f"Saving {split} set...")
             save_path = os.path.join(self.save_path, file_name[split])
             json.dump(self.processed[split], open(save_path, "w"))
@@ -338,5 +353,6 @@ if __name__ == "__main__":
     processor.process_train(filter_no_box_entity=True)
     processor.process_val(split="val", filter_no_box_entity=True)
     processor.process_val(split="test", filter_no_box_entity=True)
-    processor.process_test_sct(filter_sample_with_no_box_entity=True)
+    processor.process_val_grouped(split="val", filter_no_box_ann=True)
+    processor.process_val_grouped(split="test", filter_no_box_ann=True)
     processor.save_to_disk()

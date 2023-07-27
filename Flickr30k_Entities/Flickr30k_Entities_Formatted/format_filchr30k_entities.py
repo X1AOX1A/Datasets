@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import numpy as np
+from tqdm import tqdm
 import xml.etree.ElementTree as ET
 from copy import deepcopy as copy
 
@@ -137,8 +138,8 @@ class DataProcessor:
         self.flickr_entities_root = flickr_entities_root
         self.flickr_images_root = flickr_images_root
         self.save_path = save_path
-        self.processed = {"train": [], "val": [], "test": [], "test_sct": []}
-        self.stats = {"train": {}, "val": {}, "test": {}, "test_sct": {}}
+        self.processed = {"train": [], "val": [], "test": [], "val_grouped": [], "test_grouped": []}
+        self.stats = {"train": [], "val": [], "test": [], "val_grouped": [], "test_grouped": []}
         self.dropped_samples = []
     
     def load_splits(self):
@@ -165,13 +166,14 @@ class DataProcessor:
         self.image = {}
         self.image_size = {}
         self.boxes = {}
-        for file in os.listdir(annotations_path):
+        for file in tqdm(os.listdir(annotations_path)):
             ann_path = os.path.join(annotations_path, file)
             image_id = file.split(".")[0]   # str
             annotation = get_annotations(ann_path)
             self.image[image_id] = annotation["filename"]
             self.image_size[image_id] = [annotation["width"], annotation["height"], annotation["depth"]]
             self.boxes[image_id] = annotation["boxes"]
+        logging.info("Done.")
 
     def load_sentences(self):
         """Load sentences of all images
@@ -180,21 +182,23 @@ class DataProcessor:
         logging.info(f"Loading sentences from {sentences_path}...") 
         self.annotations = {}
         # read all txt files in the folder, with file name as the key and content as the value
-        for file in os.listdir(sentences_path):
+        for file in tqdm(os.listdir(sentences_path)):
             annotations = get_sentence_data(os.path.join(sentences_path, file))
             image_id = file.split(".")[0]            
             self.annotations[image_id] = annotations
+        logging.info("Done.")
     
     def process_examples(self):
         logging.info("Processing examples...") 
         self.examples = {}
-        for image_id in self.annotations.keys():
+        for image_id in tqdm(self.annotations.keys()):
             self.examples[image_id] = {}
             self.examples[image_id]["image_id"] = int(image_id)
             self.examples[image_id]["image"] = self.image[image_id]
             self.examples[image_id]["image_size"] = self.image_size[image_id]
             self.examples[image_id]["annotations"] = self.annotations[image_id]
             self.examples[image_id]["boxes"] = self.boxes[image_id]
+        logging.info("Done.")
 
     def drop_no_box_entity(self, image_id, annotations):
         """Drop entities that have no box (e.g. no_box, scene)
@@ -229,7 +233,7 @@ class DataProcessor:
         if filter_no_box_entity: 
             logging.info("Filter not box entity is enable.")
         image_num = 0
-        for image_id in self.splits["train"]:
+        for image_id in tqdm(self.splits["train"]):
             example = copy(self.examples[image_id])
             annotations = example["annotations"]
             # Drop the no box entity incide the annotations[{"entities"}]
@@ -242,7 +246,6 @@ class DataProcessor:
                     sample = example
                     sample["annotations"] = [annotation]
                     self.processed["train"].append(sample)
-                    # TODO: clean unless sample["boxes"]
         sample_num = cap_num = len(self.processed["train"])
         self.stats["train"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# train [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
@@ -255,7 +258,7 @@ class DataProcessor:
         if filter_no_box_entity: 
             logging.info("Filter not box entity is enable.")
         cap_num = 0   
-        for image_id in self.splits[split]:
+        for image_id in tqdm(self.splits[split]):
             example = copy(self.examples[image_id])
             annotations = example["annotations"]
             # Drop the no box entity incide the annotations[{"entities"}]
@@ -269,23 +272,15 @@ class DataProcessor:
         sample_num = image_num = len(self.processed[split])
         self.stats[split] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# {split} [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
-
-    def process_test_sct(self, filter_no_box_entity=True):
-        """Process test samples into SCT style.
+    
+    def process_val_grouped(self, split="test", filter_no_box_entity=True):
+        """Process val/test samples into SCT style.
+        Split and group the annotations with the same bbox sequence into samples.
         Each sample consists of a image and mulit caption-entity pairs **with the
         same bbox-sequence **.
             ref to the following link for details:
             https://github.com/aimagelab/show-control-and-tell/blob/master/test_region_sequence.py#L133
         """
-
-        # def contain_no_box_entity(example):
-        #     annotations = example["annotations"]
-        #     for ann in annotations:
-        #         entities = ann["entities"]
-        #         for entity in entities:
-        #             if entity["box_id"] not in example["boxes"]:
-        #                 return True
-        #     return False
         
         def find_unique_sublists(lst):
             unique_sublists, unique_indexes, unique_inverse = [], [], []
@@ -296,16 +291,17 @@ class DataProcessor:
                 unique_inverse.append(unique_sublists.index(sublist))
             return unique_indexes, unique_inverse
         
-        logging.info(f"Processing test_sct set...")
+        logging.info(f"Processing {split}_grouped set...")
         if filter_no_box_entity: 
             logging.info("Filter not box entity is enable.")
         image_num, cap_num = 0, 0
-        for image_id in self.splits["test"]:
+        for image_id in tqdm(self.splits[split]):
             example = copy(self.examples[image_id])
             image = example["image"]
             image_id = example["image_id"]
             image_size = example["image_size"]
             annotations = example["annotations"]
+            boxes = example["boxes"]
             # Drop the no box entity incide the annotations[{"entities"}]
             if filter_no_box_entity:
                 annotations = self.drop_no_box_entity(str(image_id), annotations)
@@ -327,12 +323,13 @@ class DataProcessor:
                         "image": image,
                         "image_size": image_size,
                         "annotations": annotations_,
+                        "boxes": boxes,
                     }
-                    self.processed["test_sct"].append(example_)
+                    self.processed[f"{split}_grouped"].append(example_)
 
-        sample_num = len(self.processed["test_sct"])
-        self.stats["test_sct"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
-        logging.info(f"# test_sct [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
+        sample_num = len(self.processed[f"{split}_grouped"])
+        self.stats[f"{split}_grouped"] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
+        logging.info(f"# {split}_grouped [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
     
 
     def save_to_disk(self):
@@ -341,10 +338,13 @@ class DataProcessor:
             "train": "train.json",
             "val": "val.json",
             "test": "test.json",
-            "test_sct": "test_sct.json",
+            "val_grouped": "val_grouped.json",
+            "test_grouped": "test_grouped.json",
             "info": "info.json",
         }
-        for split in ["train", "val", "test", "test_sct"]:
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
+        for split in ["train", "val", "test", "val_grouped", "test_grouped"]:
             logging.info(f"Saving {split} set...")
             save_path = os.path.join(self.save_path, file_name[split])
             json.dump(self.processed[split], open(save_path, "w"))
@@ -367,5 +367,6 @@ if __name__ == "__main__":
     processor.process_train(filter_no_box_entity=True)
     processor.process_val("val", filter_no_box_entity=True)
     processor.process_val("test", filter_no_box_entity=True)
-    processor.process_test_sct(filter_no_box_entity=True)
+    processor.process_val_grouped(split="val", filter_no_box_entity=True)
+    processor.process_val_grouped(split="test", filter_no_box_entity=True)
     processor.save_to_disk()
