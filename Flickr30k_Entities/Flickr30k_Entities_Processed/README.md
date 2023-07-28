@@ -56,18 +56,18 @@ We processed the dataset into following format:
 ### Process Procedure
 
 - [process_train](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L227): For `train` set,  we 
-    1. first filter out those entity without bbox reference (e.g., None and "_") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L202)). 
+    1. first filter out those entity without bbox reference (e.g., "no_box" and "scene") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L202)). 
         - If all entity in the annotation are filtered out, we drop the annotation. (*This may decrease the number of captions*)
         - If all annotations are dropped, we drop the sample. (*This may decrease the number of images*)
     2. then we split annotations into caption-annotation pairs.
 
 - [process_val](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L252): For `val` and `test` set, we 
-    1. filter out those entity without bbox reference (e.g., None and "_") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L202)).
+    1. filter out those entity without bbox reference (e.g.,"no_box" and "scene") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L202)).
         - If all entity in the annotation are filtered out, we drop the annotation. (*This may decrease the number of captions*)
         - If all annotations are dropped, we drop the sample. (*This may decrease the number of images*)
 
 - [process_val_grouped](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L275): For `val_grouped` and `test_grouped` set, we 
-    1. first filter out those entity without bbox reference (e.g., None and "_") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L202)).
+    1. first filter out those entity without bbox reference (e.g., "no_box" and "scene") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L202)).
         - *This may further decrease the number of captions and images.*
     3. then, we group the annotations with the same bbox reference sequence and further split them into samples, as [SCT](https://github.com/aimagelab/show-control-and-tell/blob/master/test_region_sequence.py#L133) done.
         - *This may increase the number of samples, as we split the annotations with the same bbox reference sequence into multiple samples.*
