@@ -116,9 +116,9 @@ We processed the dataset into following format:
                     {
                         "start_idx": start_idx,         # closed
                         "end_idx": end_idx,             # opened
-                        "noun_chunk": "noun_chunk"      # associated noun chunk
-                        "entity_tag": ["entity_tag"],   # associated entity tag
-                        "box_id": "box_id"              # associated box id
+                        "noun_chunk": "noun_chunk",     # associated noun chunk
+                        "entity_tag": ["entity_tag"],   # associated entity tag (only one tag)
+                        "box_id": "box_id",             # associated box id (same as entity_tag)
                     }, 
                     ...
                 ],

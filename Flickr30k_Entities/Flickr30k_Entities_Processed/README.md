@@ -13,11 +13,11 @@ We processed the dataset into following format:
                 "caption" (str): "caption_text",
                 "entities" (list[dict]): [
                     {
-                        "start_idx": start_idx,         # closed
-                        "end_idx": end_idx,             # opened
-                        "noun_chunk": "noun_chunk"      # associated noun chunk
-                        "entity_tag": ["entity_tag"],   # associated entity tag
-                        "box_id": "box_id"              # associated box id
+                        "start_idx": start_idx,             # closed
+                        "end_idx": end_idx,                 # opened
+                        "noun_chunk": "noun_chunk",         # associated noun chunk
+                        "entity_tag": ["entity_tag", ...],  # associated entity tags
+                        "box_id": "box_id",                 # associated box id
                     }, 
                     ...
                 ],
@@ -67,7 +67,7 @@ We processed the dataset into following format:
         - If all annotations are dropped, we drop the sample. (*This may decrease the number of images*)
 
 - [process_val_grouped](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L275): For `val_grouped` and `test_grouped` set, we 
-    1. first filter out those entity without bbox reference (e.g., None) ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L162)).
+    1. first filter out those entity without bbox reference (e.g., None and "_") ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/Flickr30k_Entities/Flickr30k_Entities_Processed/process_flickr30k_entities.py#L202)).
         - *This may further decrease the number of captions and images.*
     3. then, we group the annotations with the same bbox reference sequence and further split them into samples, as [SCT](https://github.com/aimagelab/show-control-and-tell/blob/master/test_region_sequence.py#L133) done.
         - *This may increase the number of samples, as we split the annotations with the same bbox reference sequence into multiple samples.*
