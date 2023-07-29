@@ -309,10 +309,11 @@ class DataProcessor:
                     # use box_id to identify the bbox sequence
                     box_seq = [item["box_id"] for item in ann["entities"]]
                     box_seq_list.append(box_seq)
-                unique_indexes, unique_inverse = find_unique_sublists(box_seq_list)
+                _, unique_inverse = find_unique_sublists(box_seq_list)
                 unique_inverse = np.array(unique_inverse)   # to use np.where
-                for uni_idx in unique_indexes:
+                for uni_idx in np.unique(unique_inverse):
                     annotations_ = [annotations[idx] for idx in np.where(unique_inverse==uni_idx)[0]]
+                    assert len(annotations_) > 0
                     example_ = {
                         "image_id": image_id,
                         "image": image,
