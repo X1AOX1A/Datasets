@@ -79,7 +79,7 @@ We processed the dataset into following format:
 
     ```
     export flickr_entities_root="/root/Documents/DATASETS/Flickr30k_Entities"
-    export save_path="/root/Documents/DATASETS/CoCo_Entities/CoCo_Entities_Processed/annotations"
+    export save_path="/root/Documents/DATASETS/Flickr30k_Entities/Flickr30k_Entities_Processed/annotations"
     python process_flickr30k_entities.py --flickr_entities_root $flickr_entities_root --save_path $save_path
     ```
     - `flickr_entities_root`: path to the Flickr30K Entities root directory
