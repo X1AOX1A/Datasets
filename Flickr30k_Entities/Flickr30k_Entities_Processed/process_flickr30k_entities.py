@@ -137,8 +137,8 @@ class DataProcessor:
     def __init__(self, flickr_entities_root, save_path):
         self.flickr_entities_root = flickr_entities_root
         self.save_path = save_path
-        self.processed = {"train": [], "val": [], "test": [], "val_grouped": [], "test_grouped": []}
-        self.stats = {"train": [], "val": [], "test": [], "val_grouped": [], "test_grouped": []}
+        self.processed = {"train": [], "val": [], "test": [], "val_rc": [], "test_rc": []}
+        self.stats = {"train": [], "val": [], "test": [], "val_rc": [], "test_rc": []}
         self.dropped_samples = []
     
     def load_splits(self):
@@ -272,7 +272,7 @@ class DataProcessor:
         self.stats[split] = {"sample_num": sample_num, "image_num": image_num, "cap_num": cap_num}
         logging.info(f"# {split} [samples|images|caption]: [{sample_num}|{image_num}|{cap_num}]")
     
-    def process_val_grouped(self, split="test", filter_no_box_entity=True):
+    def process_val_rc(self, split="test", filter_no_box_entity=True):
         """Process val/test samples into SCT style.
         Split and group the annotations with the same bbox sequence into samples.
         Each sample consists of a image and mulit caption-entity pairs **with the
@@ -338,13 +338,13 @@ class DataProcessor:
             "train": "train.json",
             "val": "val.json",
             "test": "test.json",
-            "val_grouped": "val_grouped.json",
-            "test_grouped": "test_grouped.json",
+            "val_rc": "val_rc.json",
+            "test_rc": "test_rc.json",
             "info": "info.json",
         }
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
-        for split in ["train", "val", "test", "val_grouped", "test_grouped"]:
+        for split in ["train", "val", "test", "val_rc", "test_rc"]:
             logging.info(f"Saving {split} set...")
             save_path = os.path.join(self.save_path, file_name[split])
             json.dump(self.processed[split], open(save_path, "w"))
@@ -369,6 +369,6 @@ if __name__ == "__main__":
     processor.process_train(filter_no_box_entity=True)
     processor.process_val("val", filter_no_box_entity=True)
     processor.process_val("test", filter_no_box_entity=True)
-    processor.process_val_grouped(split="val", filter_no_box_entity=True)
-    processor.process_val_grouped(split="test", filter_no_box_entity=True)
+    processor.process_val_rc(split="val", filter_no_box_entity=True)
+    processor.process_val_rc(split="test", filter_no_box_entity=True)
     processor.save_to_disk()

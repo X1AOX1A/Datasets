@@ -123,7 +123,7 @@ We processed the dataset into following format:
                     ...
                 ],
             },
-            ... # mulitple annotations for the val/test/val_grouped/test_grouped splits   
+            ... # mulitple annotations for the val/test/val_rc/test_rc splits   
         ],
         "boxes":{
             "box_id": [[x_min, y_min, x_max, y_max], ...],
@@ -138,8 +138,8 @@ We processed the dataset into following format:
 ### Splits
 
 - CoCo karpathy splits: The original CoCo karpathy splits (`train`, `val`, `test`)
-- Grouped splits: Apart from the the original splits, we further add `val_grouped` and  `test_grouped` splits, which are used for the [Show, Control and Tell](https://arxiv.org/abs/1811.10652) task. 
-    - The `val_grouped` and `test_grouped` splits are filteted and split from the original `val` and `test` split, respectively.
+- Region-Control splits: Apart from the the original splits, we further add `val_rc` and  `test_rc` splits, which are used for the [Show, Control and Tell](https://arxiv.org/abs/1811.10652) task. 
+    - The `val_rc` and `test_rc` splits are filteted and split from the original `val` and `test` split, respectively.
     - Each sample consists of a image and mulit caption-entity pairs **with the same bbox reference sequence**. For more details, please refer to the [Show, Control and Tell](https://arxiv.org/abs/1811.10652) paper.
 
 ### Statistics
@@ -147,11 +147,11 @@ We processed the dataset into following format:
 - Statistics of the processed CoCo Entities:
 
     ```
-    # train        [samples|images|captions]: [544891|113179|544891]
-    # val          [samples|images|captions]: [4995|4995|24013]
-    # test         [samples|images|captions]: [4995|4995|23938]
-    # val_grouped  [samples|images|captions]: [7029|3601|7817]
-    # test_grouped [samples|images|captions]: [6957|3569|7790]
+    # train   [samples|images|captions]: [544891|113179|544891]
+    # val     [samples|images|captions]: [4995|4995|24013]
+    # test    [samples|images|captions]: [4995|4995|23938]
+    # val_rc  [samples|images|captions]: [7029|3601|7817]
+    # test_rc [samples|images|captions]: [6957|3569|7790]
     ```
 
 ### Process Procedure
@@ -167,7 +167,7 @@ We processed the dataset into following format:
         - If all entity in the annotation are filtered out, we drop the annotation. (*This may decrease the number of captions*)
         - If all annotations are dropped, we drop the sample. (*This may decrease the number of images*)
 
-- [process_val_grouped](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L253): For `val_grouped` and `test_grouped` set, we 
+- [process_val_rc](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L253): For `val_rc` and `test_rc` set, we 
     1. first filter out the annotation that contains `"_"` entities, as [SCT](https://github.com/aimagelab/show-control-and-tell/blob/master/data/dataset.py#L134) done ([drop_no_box_ann](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#262)).
         - *This may decrease the number of captions and images.*
     2. then we filter out those entity without bbox reference (e.g., None) ([drop_no_box_entity](https://github.com/X1AOX1A/Datasets/blob/main/CoCo_Entities/CoCo_Entities_Processed/process_coco_entities.py#L162)).
@@ -196,10 +196,10 @@ We processed the dataset into following format:
     save_path/
     |-- [ 353]  info.json
     |-- [ 11M]  test.json
-    |-- [9.1M]  test_grouped.json
+    |-- [9.1M]  test_rc.json
     |-- [632M]  train.json
     |-- [ 11M]  val.json
-    `-- [9.2M]  val_grouped.json
+    `-- [9.2M]  val_rc.json
     ```
 
 
@@ -329,7 +329,7 @@ We processed the dataset into following format:
     ```
     </details>
 
-- Test grouped example
+- Test Region-Control example
     <details>
     <summary>Click to view the example</summary>
 
