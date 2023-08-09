@@ -69,7 +69,7 @@ python data/visualize_GRIT.py
   export GRIT_20M_ANNO_DOWNLOAD_DIR="./download/grit_coyo.jsonl"
   export IMAGE_URL_LIST_FILE = "./download/url_list.csv"
   export GRIT_20M_IMAGES_DOWNLOAD_DIR="./download/images"
-
+  export GRIT_20M_IMAGE_URL_TO_PATH="./download/image_url_to_path.json"
 
   ## 1. Download GRIT-coyo annotations
   chmod +x download_datasets.sh
@@ -80,8 +80,10 @@ python data/visualize_GRIT.py
   ## 2. Download GRIT-coyo images with img2dataset
   # 2.1 install img2dataset
   pip install img2dataset
+  
   # 2.2 extract image urls and image_id from `grit_coyo.jsonl` into csv
   python extract_image_url.py --jsonl_path $GRIT_20M_ANNO_DOWNLOAD_DIR --url_list_file $IMAGE_URL_LIST_FILE  
+  
   # 2.3 download images
   nohup img2dataset --url_list $IMAGE_URL_LIST_FILE \
     --output_folder $GRIT_20M_IMAGES_DOWNLOAD_DIR \
@@ -95,9 +97,19 @@ python data/visualize_GRIT.py
     --incremental "True" \
     --number_sample_per_shard 10000 >nohup.out& 2>&1
   watch -n 1 tail nohup.out
+  
   # 2.4 count the number of images downloaded
   find $GRIT_20M_IMAGES_DOWNLOAD_DIR -type f -name "*.jpg" | grep -c '.jpg$'
   # Your should probably get 12,000,000 images at 2023.07.03.
+  # Only get 8,112,182 images due to disk space limitation.
+
+  # 2.5 extract image url to path into json
+  python extract_image_path.py --image_root $GRIT_20M_IMAGES_DOWNLOAD_DIR --image_url_to_path $GRIT_20M_IMAGE_URL_TO_PATH
+  # {key: image_url, value: image_path}
+  # Processed 8112181 images.
+  # 430748 dumplicate images (url) skipped.
+  # Extracted 7681433 image paths.
+  # Writing json file to /root/Documents/DATASETS/GRIT_20M/download/image_url_to_path.json...
   ```
 
 ## Filter the Dataset with available images
