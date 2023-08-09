@@ -117,10 +117,19 @@ python data/visualize_GRIT.py
 - The downloaded files are structured as follows:
 
     ```
-    GRIT_20M/
-        train.file xxG
-        valid.file xxM
-        test.file xxM
+    GRIT_20M/download
+      |- grit_coyo.jsonl       # GRIT_20M annotations
+      |- url_list.csv          # image_url, extracted from grit_coyo.jsonl for img2dataset
+      |- images/               # GRIT_20M image_root, downloaded by img2dataset
+      |   |- 00001/            # subfolders to store images
+      |   |  |- 000000000.jpg  # downloaded image
+      |   |  |- 000000000.json # contains the "url" from grit_coyp.jsonl, may be duplicated
+      |   |  |- 000000000.txt  # contains the "image_id" from grit_coyp.jsonl, but not unique
+      |   |  |-  ...
+      |   |- 00002/
+      |   |- 00003/
+      |   |-  ...  
+      |- image_url_to_path.json # {key: image_url, value: image_path}                  
     ```
 
 ## Statistics
