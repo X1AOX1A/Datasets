@@ -32,18 +32,20 @@ More details can be found in the paper.
 - `noun_chunks`: The noun chunks (extracted by [spaCy](https://spacy.io/)) that have associated bounding boxes (predicted by [GLIP](https://github.com/microsoft/GLIP)). The items in the children list respectively represent 'Start of the noun chunk in caption', 'End of the noun chunk in caption', 'normalized x_min', 'normalized y_min', 'normalized x_max', 'normalized y_max', 'confidence score'.
 - `ref_exps`: The corresponding referring expressions. If a noun chunk has no expansion, we just copy it. 
 
-## Data Example
+## Visualization
 
 - For more real data samples, please ref to this [markdown](./data_samples.md).
 
-```
-NA
-```
 
-Run the following commands to visualize it:
-```bash
-python data/visualize_GRIT.py
-```
+- Run the following commands to visualize it:
+  ```bash
+  python data/visualize_GRIT.py
+  ```
+
+## Data Samples
+
+<details>
+<summary>Click to view samples</summary>
 
 <div style="display: flex; flex-wrap: wrap;">
   <div style="flex: 50%;">
@@ -55,6 +57,8 @@ python data/visualize_GRIT.py
     <img src="../Examples/GRIT_20M/GRIT_3.png" alt="example3" style="width: 100%;">
   </div>
 </div>
+
+</details>
 
 
 ## Download Links
