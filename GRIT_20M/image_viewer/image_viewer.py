@@ -59,6 +59,7 @@ def get_image_path(annotation, tmp_dir="./tmp", image_url_dict=None):
         image_path = image_url_dict[url]
         if os.path.exists(image_path):
             logging.info(f"Image {url} already downloaded")
+            st.info(f"Image {url} already downloaded")
             return image_path
         else:
             logging.warning(f"Image {url} not found at local path")
@@ -66,6 +67,7 @@ def get_image_path(annotation, tmp_dir="./tmp", image_url_dict=None):
     # try to download image
     try:  
         logging.info(f"Downloading {url}...")
+        st.info(f"Downloading {url}...")
         response = requests.get(url)  
         response.raise_for_status()              
         file_name = os.path.basename(urlparse(url).path)  
@@ -75,7 +77,8 @@ def get_image_path(annotation, tmp_dir="./tmp", image_url_dict=None):
             f.write(response.content)
         return image_path
     except Exception as e:  
-        logging.error(f"Error while downloading {url}: {e}")  
+        logging.error(f"Error while downloading {url}: {e}")
+        st.error(f"Error while downloading {url}: {e}")
         return None
 
 
@@ -84,6 +87,7 @@ def draw_annotation(annotation, image_path, tmp_dir="./tmp"):
         pil_img = Image.open(image_path).convert("RGB")
     except Exception as e:
         logging.error(f"Error while opening image {image_path}: {e}")
+        st.error(f"Error while opening image {image_path}: {e}")
         return None
     image = np.array(pil_img)[:, :, [2, 1, 0]]
     image_h = pil_img.height
@@ -159,6 +163,7 @@ def draw_annotation(annotation, image_path, tmp_dir="./tmp"):
         return anno_image_path
     except Exception as e:
         logging.error(f"Error while saving {image_path}: {e}")
+        st.error(f"Error while saving {image_path}: {e}")
         # Out of (supported formats: eps, jpeg, jpg, pdf, pgf, png, ps, raw, rgba, svg, svgz, tif, tiff, webp)
         return None
 
@@ -171,6 +176,7 @@ def save_annotated_image(img, file_name="tmp.jpg", caption='test'):
     # Set caption text
     # Add caption below image
     if caption:
+        st.info("Caption: " + caption)
         ax.text(0.5, -0.2, '\n'.join(textwrap.wrap(caption, 120)), ha='center', transform=ax.transAxes, fontsize=18)
     plt.savefig(file_name, bbox_inches='tight')
     plt.close()
@@ -182,11 +188,13 @@ def main(args):
     image_url_dict = get_image_url_dict(args.image_url_to_path) if args.image_url_to_path else None
 
     # Create radio buttons to select the index or choose random
-    sample_idx = st.text_input(f"Enter an index between [0, {args.sample_num}] or type 'Random'", value="0")
+    sample_idx = st.text_input(f"Enter an index between [0, {args.sample_num-1}] or type 'Random'", value="0")
 
     if sample_idx != "":
-        if sample_idx == "Random":
+        if sample_idx in ["Random", "random"]:
             sample_idx = random.randint(0, args.sample_num)
+            logging.info(f"Randomly selected index: {sample_idx}")
+            st.info(f"Randomly selected index: {sample_idx}")
         else:
             sample_idx = int(sample_idx)
 
@@ -206,7 +214,7 @@ def main(args):
                 anno_image = Image.open(anno_image_path)
                 st.image(anno_image, caption='Annotated Image', use_column_width=True)
         else:
-            st.write("Invalid index or no images found for the selected index.")
+            st.warning("Invalid index or no images found for the selected index.")
 
 # class args:
 #     path_to_ann = "/root/Documents/DATASETS/GRIT_20M/download/grit_coyo.jsonl"
@@ -218,7 +226,7 @@ import argparse
 def args_parser():
     parser = argparse.ArgumentParser(description='Image Viewer')
     parser.add_argument('--path_to_ann', type=str, help='Path to the annotation file.')
-    parser.add_argument('--image_url_to_path', type=str, default=None, help='Path to the image url to path file.')
+    parser.add_argument('--image_url_to_path', type=str, default=None, help='Path to the image url to path file. If not provided, the image path will be downloaded each time requested.')
     parser.add_argument('--tmp_dir', type=str, default="./tmp", help='Path to the tmp directory.')
     parser.add_argument('--sample_num', type=int, default=1000,help='Number of samples to display.')
     return parser.parse_args()
