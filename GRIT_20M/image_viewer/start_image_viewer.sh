@@ -1,0 +1,1 @@
+streamlit run /root/Documents/DATASETS/GRIT_20M/image_viewer/image_viewer.py --server.fileWatcherType none -- --path_to_ann /root/Documents/DATASETS/GRIT_20M/download/grit_coyo.jsonl --image_url_to_path /root/Documents/DATASETS/GRIT_20M/download/image_url_to_path.json --tmp_dir /root/Documents/DATASETS/GRIT_20M/tmp --sample_num 1000
