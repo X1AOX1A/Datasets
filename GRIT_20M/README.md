@@ -67,7 +67,7 @@ python data/visualize_GRIT.py
   ```shell
   cd GRIT_20M  
   export GRIT_20M_ANNO_DOWNLOAD_DIR="./download/grit_coyo.jsonl"
-  export IMAGE_URL_LIST_FILE = "./download/url_list.csv"
+  export IMAGE_URL_LIST_FILE="./download/url_list.csv"
   export GRIT_20M_IMAGES_DOWNLOAD_DIR="./download/images"
   export GRIT_20M_IMAGE_URL_TO_PATH="./download/image_url_to_path.json"
 
@@ -138,6 +138,19 @@ python data/visualize_GRIT.py
 - #Objects: 137,349,210
 - #Text Spans: 114,978,233
 - Avg Expression Length: 4.7
+
+## Image Viwer
+
+- Run the following commands to view the images:
+
+  ```bash
+  cd GRIT_20M  
+  export GRIT_20M_ANNO_DOWNLOAD_DIR="./download/grit_coyo.jsonl"
+  export GRIT_20M_IMAGE_URL_TO_PATH="./download/image_url_to_path.json"
+  streamlit run ./image_viewer/image_viewer.py --server.fileWatcherType none -- --path_to_ann $GRIT_20M_ANNO_DOWNLOAD_DIR --image_url_to_path $GRIT_20M_IMAGE_URL_TO_PATH --tmp_dir ./tmp --sample_num 1000
+  ```
+
+  ![image_viewer](./image_viewer/image_viewer.png)
 
 ## Reference
 
