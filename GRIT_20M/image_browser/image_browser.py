@@ -114,6 +114,7 @@ def draw_annotation(annotation, image_path, tmp_dir="./tmp"):
         phrase = caption[phrase_s:phrase_e]
         x1, y1, x2, y2 = int(x1_norm * image_w), int(y1_norm * image_h), int(x2_norm * image_w), int(y2_norm * image_h)
         print(f"Decode results: {phrase} - {[x1, y1, x2, y2]}")
+        st.info(f"Decode results: {phrase} - {[x1, y1, x2, y2]}")
         # draw bbox
         # random color
         color = tuple(np.random.randint(0, 255, size=3).tolist())
@@ -182,8 +183,8 @@ def save_annotated_image(img, file_name="tmp.jpg", caption='test'):
     plt.close()
 
 def main(args):
-    st.set_page_config(layout="wide")
-    st.title("Image Viewer")    
+    # st.set_page_config(layout="wide")
+    st.title("Image Browser")    
     annotations = read_jsons(args.path_to_ann, args.sample_num)    
     image_url_dict = get_image_url_dict(args.image_url_to_path) if args.image_url_to_path else None
 
@@ -208,11 +209,11 @@ def main(args):
             with col1:
                 st.write("Original Image")
                 image = Image.open(image_path)
-                st.image(image, caption='Original Image', use_column_width=True)
+                st.image(image, caption='Original Image', use_column_width="auto", )
             with col2:
                 st.write("Annotated Image")
                 anno_image = Image.open(anno_image_path)
-                st.image(anno_image, caption='Annotated Image', use_column_width=True)
+                st.image(anno_image, caption='Annotated Image', use_column_width="auto")
         else:
             st.warning("Invalid index or no images found for the selected index.")
 
@@ -224,7 +225,7 @@ def main(args):
 
 import argparse
 def args_parser():
-    parser = argparse.ArgumentParser(description='Image Viewer')
+    parser = argparse.ArgumentParser(description='Image Browser')
     parser.add_argument('--path_to_ann', type=str, help='Path to the annotation file.')
     parser.add_argument('--image_url_to_path', type=str, default=None, help='Path to the image url to path file. If not provided, the image path will be downloaded each time requested.')
     parser.add_argument('--tmp_dir', type=str, default="./tmp", help='Path to the tmp directory.')
