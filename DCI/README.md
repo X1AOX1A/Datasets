@@ -130,7 +130,7 @@ python dataset/densely_captioned_images/dataset/scripts/download.py
 
 ## Statistics
 
-NA
+![statistics](../Examples/DCI/statistics.png)
 
 ## Reference
 
