@@ -44,15 +44,15 @@ The `DenseCaptionedImage` class acts as a wrapper around the stored data json, w
     "short_caption": "A standard short-form caption for the image",
     "mask_data": {
       "[mask_key]": {
-        "idx": "[mask_key]", # Self-reference into mapping
-        "outer_mask": "iVBORw0KGgoAAAANSUhE.....", # base64 encoding of the binary mask for this segment
-        "mask_quality": 0, # one of 0, 1, or 2 for "ok", "low-quality/uninteresting", or "bad" respectively
+        "idx": "[mask_key]",                        # Self-reference into mapping
+        "outer_mask": "iVBORw0KGgoAAAANSUhE.....",  # base64 encoding of the binary mask for this segment
+        "mask_quality": 0,                          # one of 0, 1, or 2 for "ok", "low-quality/uninteresting", or "bad" respectively
         "label": "A short label for the given mask", # omitted if "bad" quality
         "caption": "A long descriptive caption for this given mask", # only for "ok" masks
-        "parent": "other_mask_key", # either the parent mask id in the tree, or -1 if parent is the base image
+        "parent": "other_mask_key",                 # either the parent mask id in the tree, or -1 if parent is the base image
         "requirements": ["list", "of", "children", "masks"] # mask IDs for children masks
-        "bounds": [[0, 0], [500, 500]] # TopLeft & BottomRight coords of mask bounds
-        "area": 123, # mask size in pixels 
+        "bounds": [[0, 0], [500, 500]]              # TopLeft & BottomRight coords of mask bounds
+        "area": 123,                                # mask size in pixels 
       },
       # ...
     },
