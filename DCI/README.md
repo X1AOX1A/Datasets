@@ -106,6 +106,8 @@ So long as you can wrap a model in `CLIPModel`, you can use the `run_dense_cap_o
 ## Download Script
 
 ```shell
+cd /data/DATASETS/
+git clone git@github.com:facebookresearch/DCI.git
 cd /data/DATASETS/DCI
 conda create -n densecaps python=3.10
 conda activate densecaps
